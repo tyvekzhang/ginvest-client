@@ -1,0 +1,80 @@
+@layer theme, base, antd, components, utilities;
+
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-primary-bg: var(--color-primary-bg);
+  --color-submenu-bg: var(--color-submenu-bg);
+  --color-secondary: var(--secondary);
+  --color-secondary: var(--secondary);
+  --color-on-surface-var: var(--on-surface-var);
+}
+
+:root {
+  --primary: oklch(0.6133 0.1925 266.93);
+  --on-primary: oklch(1 0 0);
+  --color-primary-bg: oklch(0.3087 0.0195 229.78);
+  --color-submenu-bg: oklch(0.281 0.0177 227.38);
+  --secondary: oklch(0.6585 0.0468 275.07);
+  --on-surface-var: oklch(0.9145 0.0081 286.24);
+}
+
+@layer components {
+  .card {
+    background-color: var(--color-white);
+    border-radius: var(--rounded-lg);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow-xl);
+  }
+
+  /* 按钮基础样式 */
+  .btn {
+    @apply border-0 cursor-pointer transition-colors duration-300;
+    @apply disabled:cursor-not-allowed;
+  }
+
+  /* 导入按钮 - 黄绿色系 */
+  .btn-import {
+    @apply bg-green-50 text-green-600;
+    @apply hover:bg-green-600 hover:text-white hover:opacity-70;
+    @apply disabled:bg-green-50 disabled:text-green-600;
+  }
+
+  /* 导出按钮 - 灰色系 */
+  .btn-export {
+    @apply bg-gray-200 text-gray-500;
+    @apply hover:bg-gray-500 hover:text-white hover:opacity-70;
+    @apply disabled:bg-gray-100 disabled:text-gray-500;
+  }
+
+  /* 批量删除按钮 - 红色系 */
+  .btn-batch-delete {
+    @apply bg-orange-50 text-orange-600;
+    @apply hover:bg-orange-500 hover:text-white hover:opacity-70;
+    @apply disabled:bg-orange-50 disabled:text-orange-600;
+  }
+
+  /* 移除按钮 - 蓝色系 (无背景) */
+  .btn-remove {
+    @apply text-blue-500 bg-transparent;
+    @apply hover:text-orange-500;
+    @apply disabled:text-orange-500;
+  }
+
+  /* 操作按钮 - 蓝色系 (无背景) */
+  .btn-operation {
+    @apply text-blue-500 bg-transparent;
+    @apply hover:text-blue-600;
+    @apply disabled:text-blue-500;
+  }
+
+  /* 批量更新按钮 - 蓝色系 */
+  .btn-batch-update {
+    @apply bg-blue-50 text-blue-600;
+    @apply hover:bg-blue-600 hover:text-white hover:opacity-70;
+    @apply disabled:bg-blue-50 disabled:text-blue-600;
+  }
+}
