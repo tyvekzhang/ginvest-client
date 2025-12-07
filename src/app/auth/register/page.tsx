@@ -16,6 +16,8 @@ import { Eye, EyeOff, Lock, Mail, User, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth-store';
+import { register, sendVerificationCode } from '@/service/auth-service';
+import { SendVerificationCodeRequest } from '@/types/auth';
 
 const { Title, Text } = Typography;
 
@@ -38,7 +40,7 @@ const CardDecorativeBubble = () => {
 // ---------------- 注册页组件 ------------------
 export default function RegisterPage() {
   const router = useRouter();
-  const { register: registerAction, loading } = useAuthStore();
+  const [loading, setLoading] = useState(false)
 
   const [form] = Form.useForm();
   const [countdown, setCountdown] = useState(0);
@@ -53,25 +55,39 @@ export default function RegisterPage() {
 
   // ---------- 表单提交 ----------
   const onFinish = async (values: any) => {
+    debugger
     delete values.confirmPassword;
-
     try {
-      await registerAction(values);
-      message.success('注册成功！请登录');
-      router.push('/auth/login');
+      register(values).then(res => {
+        
+        const msg = res.message
+        if (msg !== undefined) {
+          message.success(msg);
+          router.push('/auth/login');
+        } else {
+          console.log(res)
+        }
+
+      })
     } catch (error) {
       message.error('注册失败，请检查信息是否正确');
     }
   };
 
-  const handleSendCode = () => {
+  const handleSendCode = async () => {
     const email = form.getFieldValue('email');
     if (!email || !validateEmail(email)) {
       message.error('请输入有效的邮箱地址');
       return;
     }
 
-    message.success('验证码已发送');
+    const req: SendVerificationCodeRequest = {
+      email: email
+    }
+
+    message.success("验证码已发送, 请查看邮箱");
+    await sendVerificationCode(req)
+
     setCountdown(60);
 
     const timer = setInterval(() => {
@@ -162,12 +178,12 @@ export default function RegisterPage() {
                   validator(_, value) {
                     if (!value) return Promise.reject('请输入密码');
 
-                    // 必须包含数字和字母，且不少于 6 位
-                    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+                    // 必须包含数字和字母，且不少于 8 位
+                    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~!]).{8,}$/;
 
                     return regex.test(value)
                       ? Promise.resolve()
-                      : Promise.reject('密码需包含数字和字母，且不少于 6 位');
+                      : Promise.reject('密码需包含数字和字母，且不少于 8 位');
                   },
                 },
               ]}
@@ -241,7 +257,7 @@ export default function RegisterPage() {
                 type="primary"
                 htmlType="submit"
                 loading={loading}
-                className="w-full mt-4 h-12 rounded-lg bg-primary border-0 hover:opacity-80 transition-all duration-200"
+                className="w-full mt-8 h-12 rounded-lg bg-primary border-0 hover:opacity-80 transition-all duration-200"
               >
                 {loading ? '注册中...' : '注册'}
               </Button>

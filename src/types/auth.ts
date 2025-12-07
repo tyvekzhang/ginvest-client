@@ -3,6 +3,23 @@ export type OAuth2PasswordRequestForm = {
   password: string;
 };
 
+export type EmailAndCodeRequest = {
+  email: string;
+  code: string;
+};
+
+
+export type UserRegisterRequest = {
+  email: string;
+  code: string;
+  password: string;
+};
+
+export type SendVerificationCodeRequest = {
+  email: string;
+};
+
+
 export type UserCredential = {
   access_token: string;
   expires_in: number;

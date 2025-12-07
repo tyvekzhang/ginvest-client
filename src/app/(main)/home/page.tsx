@@ -1,143 +1,38 @@
-'use client';
+"use client"
 
-import { useGlobalToast } from '@/components/assist/global-toast';
-import { Badge, Button, Card, List, Statistic } from 'antd';
-import {
-  Bell,
-  Bot,
-  CheckCircle,
-  LineChart,
-  Plus,
-  Trash2,
-  Zap,
-} from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Space } from "antd"
+import { useEffect, useState } from "react"
 
-const Home = () => {
-  const { message, notification } = useGlobalToast();
-  const { t } = useTranslation('common');
-  const router = useRouter();
+const MotivationalPage = () => {
+  const motivationalQuotes = [
+    { emoji: "💪", text: "每一天都是新的开始，你已经在成长的道路上！" },
+    { emoji: "🌟", text: "相信自己，你拥有无限的潜力和可能性！" },
+    { emoji: "🎯", text: "坚持不懈，你正在朝着梦想迈进，不要放弃！" },
+    { emoji: "🚀", text: "突破自己，你能做到比想象中更伟大的事情！" },
+    { emoji: "🌈", text: "用微笑面对挑战，因为你足够强大！" },
+    { emoji: "✨", text: "今天的努力，就是明天的成就，加油！" },
+    { emoji: "❤️", text: "你很棒，记住这一点，因为这是真的！" },
+  ]
 
-  const showToast = () => {
-    message.success('缓存已清空');
-  };
+  const [quote, setQuote] = useState<(typeof motivationalQuotes)[0] | null>(null)
 
-  const showNotifaction = () => {
-    notification.error({
-      message: '出错了',
-      description: '网络请求失败，请重试。',
-    });
-  };
-
-  const handleCodeGenClick = () => {
-    router.push('/tool/codegen');
-  };
-  const handleBotClick = () => {
-    window.open('/chat', '_blank');
-  };
   useEffect(() => {
-    // 初始化逻辑
-  }, []);
+    const randomIndex = Math.floor(Math.random() * motivationalQuotes.length)
+    setQuote(motivationalQuotes[randomIndex])
+  }, [])
+
+  if (!quote) {
+    return null
+  }
 
   return (
-    <div className="p-6 space-y-6 bg-gray-50 overflow-auto">
-      {/* 数据概览 */}
-      <Card title="📊 数据概览（指标 + 图表）" className="shadow rounded-2xl">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatisticCard
-            title="用户数"
-            value={112893}
-            icon={<LineChart className="w-4 h-4" />}
-          />
-          <StatisticCard
-            title="活跃度"
-            value={93.2}
-            suffix="%"
-            icon={<Zap className="w-4 h-4" />}
-          />
-          <StatisticCard
-            title="警报数"
-            value={23}
-            icon={<Bell className="w-4 h-4" />}
-          />
-          <StatisticCard
-            title="完成任务"
-            value={76}
-            icon={<CheckCircle className="w-4 h-4" />}
-          />
-        </div>
-      </Card>
-
-      {/* 快捷操作 */}
-      <Card title="⚡ 快捷操作" className="shadow rounded-2xl">
-        <div className="flex flex-wrap gap-3">
-          <Button
-            type="primary"
-            icon={<Plus className="w-4 h-4" />}
-            onClick={handleCodeGenClick}
-          >
-            代码生成
-          </Button>
-          <Button icon={<Bot className="w-4 h-4" />} onClick={handleBotClick}>
-            AI助手
-          </Button>
-          <Button
-            danger
-            onClick={showToast}
-            icon={<Trash2 className="w-4 h-4" />}
-          >
-            清空缓存
-          </Button>
-        </div>
-      </Card>
-
-      {/* 待办事项 / 警报 + 最新动态 并排显示 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 待办事项 */}
-        <Card title="📌 待办事项 / 警报" className="shadow rounded-2xl">
-          <List
-            bordered
-            dataSource={['审批用户注册', '处理系统告警', '更新数据模型']}
-            renderItem={(item) => (
-              <List.Item>
-                <Badge status="processing" text={item} />
-              </List.Item>
-            )}
-          />
-        </Card>
-
-        {/* 最新动态 */}
-        <Card title="📝 最新动态" className="shadow rounded-2xl">
-          <List
-            size="small"
-            dataSource={['系统完成了每日备份', '管理员更新了权限设置']}
-            renderItem={(item) => <List.Item>{item}</List.Item>}
-          />
-        </Card>
-      </div>
+    <div className="h-full flex items-center justify-center p-4">
+      <Space className="bg-background rounded-2xl  p-2 md:p-12 max-w-2xl w-full text-center">
+        <div className="text-3xl">{quote.emoji}</div>
+        <p className="text-2xl md:text-3xl text-gray-800 leading-relaxed text-balance">{quote.text}</p>
+      </Space>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
-
-// 子组件：封装统计卡片
-const StatisticCard = ({
-  title,
-  value,
-  suffix,
-  icon,
-}: {
-  title: string;
-  value: number;
-  suffix?: string;
-  icon?: React.ReactNode;
-}) => {
-  return (
-    <Card variant="borderless" className="bg-white rounded-xl">
-      <Statistic title={title} value={value} prefix={icon} suffix={suffix} />
-    </Card>
-  );
-};
+export default MotivationalPage

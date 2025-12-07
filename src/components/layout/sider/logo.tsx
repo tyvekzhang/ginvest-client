@@ -9,13 +9,13 @@ export function Logo() {
   return (
     <Link
       href="/"
-      className="h-14 flex items-center justify-center text-gray-100 text-lg transition-all duration-75"
+      className="h-14 flex items-center justify-center text-gray-100 text-lg transition-all duration-75 px-4"
     >
       {collapsed ? (
         <Image
           src="/logo.png"
           alt="Logo"
-          height={28}
+          height={24}
           className="object-contain"
         />
       ) : (
@@ -23,8 +23,8 @@ export function Logo() {
           <Image
             src="/logo.png"
             alt="Logo"
-            width={28}
-            height={28}
+            width={24}
+            height={24}
             className="object-contain"
           />
           <span>{APP_CONFIG.NAME}</span>

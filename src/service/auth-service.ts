@@ -1,5 +1,12 @@
 import httpClient from '@/lib/http';
-import { OAuth2PasswordRequestForm, UserCredential } from '@/types/auth';
+import { StandardResponse } from '@/lib/http/types';
+import { EmailAndCodeRequest, OAuth2PasswordRequestForm, SendVerificationCodeRequest, UserCredential, UserInfo, UserRegisterRequest } from '@/types/auth';
+
+export function fetchUserInfo() {
+  return httpClient.get<UserInfo>(
+    '/users:me',
+  );
+}
 
 export function signInWithEmailAndPassword(req: OAuth2PasswordRequestForm) {
   return httpClient.post<UserCredential>(
@@ -12,3 +19,27 @@ export function signInWithEmailAndPassword(req: OAuth2PasswordRequestForm) {
     },
   );
 }
+
+
+export function signInWithEmailAndCode(req: EmailAndCodeRequest) {
+  return httpClient.post<UserCredential>(
+    '/auth:signInWithEmailAndCode',
+    req,
+  );
+}
+
+
+export function sendVerificationCode(req: SendVerificationCodeRequest) {
+  return httpClient.post<StandardResponse>(
+    '/auth:sendVerificationCode',
+    req,
+  );
+}
+
+export function register(req: UserRegisterRequest) {
+  return httpClient.post<StandardResponse>(
+    '/auth:register',
+    req,
+  );
+}
+

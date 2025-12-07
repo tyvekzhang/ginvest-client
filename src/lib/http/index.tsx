@@ -3,6 +3,7 @@ import { APP_CONFIG, CONSTANTS } from '@/config';
 import { HTTP_CONFIG } from '@/config/api';
 import { isDebugEnabled } from '@/config/env';
 import { UserCredential } from '@/types/auth';
+import { useAuthStore } from '@/stores/auth-store';
 import { message } from 'antd';
 import axios, {
   type AxiosInstance,
@@ -130,6 +131,7 @@ class HttpClient {
         }
 
         const { status, data } = error.response;
+        message.error(data?.message ? data?.message : "未知错误");
         if (status === HTTP_CONFIG.STATUS_CODES.UNAUTHORIZED) {
           this.handleUnauthorized();
         }
@@ -142,29 +144,30 @@ class HttpClient {
     );
   }
 
-  public getToken(): UserCredential | null {
-    // Get token from localStorage
+  private getToken(): UserCredential | null {
     try {
       const authStorage = localStorage.getItem(APP_CONFIG.STORAGE_KEYS.AUTH);
       if (authStorage) {
         const parsed = JSON.parse(authStorage);
         return parsed.state?.token || null;
       }
-    } catch (error) {
-      console.error('Failed to get token from localStorage:', error);
+    } catch {
+      return null
     }
-    return null;
+    const tokenFromStore = useAuthStore.getState().token;
+    if (tokenFromStore) return tokenFromStore;
+    return null
   }
 
   private handleUnauthorized() {
     // Clear authentication information
-    localStorage.removeItem(APP_CONFIG.STORAGE_KEYS.AUTH);
+    // localStorage.removeItem(APP_CONFIG.STORAGE_KEYS.AUTH);
 
     // Redirect to login page
     if (typeof window !== 'undefined') {
       const currentPath = window.location.pathname;
-      if (currentPath !== '/auth/login') {
-        window.location.href = '/auth/login';
+      if (currentPath !== '/auth/login' && currentPath !== '/auth/register') {
+        // window.location.href = '/auth/login';
       }
     }
   }

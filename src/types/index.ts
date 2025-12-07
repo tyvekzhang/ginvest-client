@@ -1,3 +1,9 @@
+interface ApiResponse<T = any> {
+  code: number;
+  message: string;
+  data?: T; 
+}
+
 export interface OrderItem {
   field: string;
   order: 'asc' | 'desc';

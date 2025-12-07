@@ -8,7 +8,7 @@ export interface TokenResponse {
 
 export interface StandardResponse<T = any> {
   code: number;
-  msg: string;
+  message: string;
   data?: T;
 }
 

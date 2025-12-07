@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuthStore } from '@/stores/auth-store';
 import { useDictStore } from '@/stores/dict-store';
 import { useMenuStore } from '@/stores/menu-store';
 import { getExpandedMenuPaths } from '@/utils/navigation-util';
