@@ -28,8 +28,8 @@ const MotivationalPage = () => {
   return (
     <div className="h-full flex items-center justify-center p-4">
       <Space className="bg-background rounded-2xl  p-2 md:p-12 max-w-2xl w-full text-center">
-        <div className="text-3xl">{quote.emoji}</div>
-        <p className="text-2xl md:text-3xl text-gray-800 leading-relaxed text-balance">{quote.text}</p>
+        <div className="text-3~xl">{quote.emoji}</div>
+        <p className="text-xl md:text-xxl text-gray-800 leading-relaxed text-balance">{quote.text}</p>
       </Space>
     </div>
   )

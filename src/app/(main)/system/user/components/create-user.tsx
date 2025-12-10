@@ -71,7 +71,7 @@ const CreateUserComponent: React.FC<CreateUserProps> = ({
           form={createUserForm}
           name="createUser"
           onFinish={onCreateUserFinish}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-y-0 gap-x-2 pt-4"
+          className="grid grid-cols-1 lg:grid-cols-1 gap-y-0 gap-x-2 pt-4"
         >
           <Form.Item
             name="username"
@@ -93,13 +93,6 @@ const CreateUserComponent: React.FC<CreateUserProps> = ({
             rules={[{ required: false, message: '请输入昵称' }]}
           >
             <Input placeholder="请输入昵称" />
-          </Form.Item>
-          <Form.Item
-            name="avatar_url"
-            label="头像地址"
-            rules={[{ required: false, message: '请输入头像地址' }]}
-          >
-            <Input placeholder="请输入头像地址" />
           </Form.Item>
           <Form.Item
             name="status"

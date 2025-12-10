@@ -35,6 +35,7 @@ import { CreateUser, ListUsersRequest, UpdateUser, User } from '@/types/user';
 import { ListUserRolesRequest } from '@/types/user-role';
 import {
   Button,
+  Dropdown,
   Form,
   Input,
   message,
@@ -45,13 +46,15 @@ import {
 } from 'antd'; // 添加 Modal, Select, Button
 import { ColumnsType } from 'antd/lib/table';
 import { format } from 'date-fns';
-import { CheckCircle2, MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
+import { CheckCircle2, MoreHorizontal, PenLine, RotateCcw, Trash2 } from 'lucide-react';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
 import CreateUserComponent from './components/create-user';
 import ImportUserComponent from './components/import-user';
 import QueryUserComponent from './components/query-user';
 import UpdateUserComponent from './components/update-user';
+import { resetPassword } from '@/service/auth-service';
+import ResetPasswordComponent, { ResetPasswordValues } from './components/reset-password';
 
 const formItemLayout = {
   labelCol: { span: 4 },
@@ -62,12 +65,12 @@ const UserPage: React.FC = () => {
   // 配置模块
   const actionConfig = {
     showCreate: true,
-    showImport: true,
+    showImport: false,
     showExport: true,
     showModify: false,
     showRemove: true,
   };
-  const showMore = false;
+  const showMore = true;
 
   const { dictData } = useDictDataOptions('user_status'.split(','));
 
@@ -145,9 +148,9 @@ const UserPage: React.FC = () => {
 
   const onAssignRole = async (user: User) => {
     setCurrentUser(user);
-    assignRoleForm.setFieldsValue({"username": user.username, "nickname": user.nickname});
+    assignRoleForm.setFieldsValue({ "username": user.username, "nickname": user.nickname });
     setIsAssignRoleModalVisible(true);
-    
+
     // 获取用户现有角色
     try {
       const response = await httpClient.get('/userRoles', {
@@ -192,6 +195,48 @@ const UserPage: React.FC = () => {
     }
   };
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [recordToReset, setRecordToReset] = useState<User | null>();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [resetPasswordForm] = Form.useForm();
+
+  const handleOpenResetModal = (record: User) => {
+    setRecordToReset(record);
+    setIsModalVisible(true);
+    resetPasswordForm.resetFields();
+  };
+
+  // 3. 操作函数 - 关闭模态框
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    setRecordToReset(null);
+    resetPasswordForm.resetFields();
+  };
+
+  const handleFinish = async (values: ResetPasswordValues) => {
+    if (!recordToReset) {
+      message.error("未找到用户记录，无法重置密码。");
+      return;
+    }
+    if (values.newPassword === null || values.newPassword === undefined) {
+      return
+    }
+
+    setIsLoading(true);
+    try {
+      await resetPassword(recordToReset.id, values.newPassword);
+      message.success(`用户 ${recordToReset.nickname} 的密码已成功重置！`);
+
+      handleCancel();
+
+    } catch (error) {
+      message.error("重置密码失败");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // 表格列信息
   const userColumns: ColumnsType<User> = [
     {
@@ -212,21 +257,13 @@ const UserPage: React.FC = () => {
       dataIndex: 'username',
       key: 'username',
       render: (text) => (text ? text : '-'),
-      width: '12%',
+      width: '16%',
       ellipsis: true,
     },
     {
       title: '昵称',
       dataIndex: 'nickname',
       key: 'nickname',
-      render: (text) => (text ? text : '-'),
-      width: '12%',
-      ellipsis: true,
-    },
-    {
-      title: '头像地址',
-      dataIndex: 'avatar_url',
-      key: 'avatar_url',
       render: (text) => (text ? text : '-'),
       width: '12%',
       ellipsis: true,
@@ -258,13 +295,13 @@ const UserPage: React.FC = () => {
           return null;
         });
       },
-      width: '6%',
+      width: '10%',
     },
     {
       title: '备注',
       dataIndex: 'remark',
       key: 'remark',
-      render: (text) => (text ? text : '-'),
+      render: (text) => (text ? text : '--'),
       width: '12%',
       ellipsis: true,
     },
@@ -287,19 +324,44 @@ const UserPage: React.FC = () => {
       align: 'center',
       render: (_, record) => {
         if (record.id.toString() === '9') {
-          return null;
+          return "--";
         }
+
+        const items = [
+          {
+            key: 'assignRole',
+            label: (
+              <a onClick={() => onAssignRole(record)} className="flex items-center gap-1 cursor-pointer btn-operation text-xs">
+                <CheckCircle2 className="w-3 h-3" />
+                分配角色
+              </a>
+            ),
+          },
+          {
+            key: 'resetPassword',
+            label: (
+              <a
+                className="flex items-center gap-1 btn-remove cursor-pointer text-xs"
+                onClick={() => handleOpenResetModal(record)}
+              >
+                <RotateCcw className="w-3 h-3" />
+                重置密码
+              </a>
+            ),
+          },
+        ];
 
         return (
           <div className="flex gap-2 items-center justify-center">
             <button
               type="button"
-              className="flex items-center gap-0.5 text-xs btn-operation"
+              className="flex items-center gap-0.5 text-xs btn-operation cursor-pointer"
               onClick={() => onUpdateUser(record)}
             >
               <PenLine className="w-3 h-3" />
               编辑
             </button>
+
             <Popconfirm
               title="确认删除"
               description="确定删除吗? 删除后将无法找回"
@@ -309,30 +371,26 @@ const UserPage: React.FC = () => {
             >
               <button
                 type="button"
-                className="flex items-center gap-0.5 text-xs btn-remove"
+                className="flex items-center gap-0.5 text-xs btn-remove cursor-pointer"
               >
                 <Trash2 className="w-3 h-3" />
                 删除
               </button>
             </Popconfirm>
-            <button
-              type="button"
-              className="flex items-center gap-0.5 text-xs btn-operation"
-              onClick={() => onAssignRole(record)}
-            >
-              <CheckCircle2 className="w-3 h-3" />
-              分配角色
-            </button>
 
-            {showMore && (
+            <Dropdown
+              menu={{ items }}
+              trigger={['click']}
+            >
               <button
                 type="button"
-                className="flex items-center gap-0.5 text-xs btn-operation"
+                className="flex items-center gap-0.5 text-xs btn-operation cursor-pointer"
+                onClick={(e) => e.preventDefault()}
               >
                 <span>更多</span>
                 <MoreHorizontal className="w-3 h-3" />
               </button>
-            )}
+            </Dropdown>
           </div>
         );
       },
@@ -534,7 +592,7 @@ const UserPage: React.FC = () => {
           onCreate={onCreateUser}
           onImport={onImportUser}
           onExport={onUserExport}
-          onBatchModify={() => {}}
+          onBatchModify={() => { }}
           onConfirmBatchRemove={handleUserBatchRemove}
           onConfirmBatchRemoveCancel={handleUserBatchRemoveCancel}
           isQueryShow={isQueryUserShow}
@@ -584,6 +642,14 @@ const UserPage: React.FC = () => {
             updateUserForm={updateUserForm}
           />
         </div>
+        <ResetPasswordComponent
+          isModalVisible={isModalVisible}
+          onCancel={handleCancel}
+          onFinish={handleFinish}
+          isLoading={isLoading}
+          resetPasswordForm={resetPasswordForm}
+          userName={recordToReset ? recordToReset.nickname : ''}
+        />
         <div>
           <ImportUserComponent
             isImportUserModalVisible={isImportUserModalVisible}
@@ -672,3 +738,5 @@ const UserPage: React.FC = () => {
 };
 
 export default UserPage;
+
+

@@ -71,26 +71,20 @@ const UpdateUserComponent: React.FC<UpdateUserProps> = ({
         form={updateUserForm}
         name="updateUser"
         onFinish={onUpdateUserFinish}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-y-0 gap-x-2 pt-4"
+        className="grid grid-cols-1 lg:grid-cols-1 gap-y-0 gap-x-2 pt-4"
       >
         <Form.Item
           name="username"
           label="用户名"
           rules={[{ required: false, message: '请输入' }]}
         >
-          <Input placeholder="请输入用户名" />
+          <Input placeholder="请输入用户名" disabled />
         </Form.Item>
-        <Form.Item
-          name="password"
-          label="密码"
-          rules={[{ required: false, message: '请输入' }]}
-        >
-          <Input placeholder="请输入密码" />
-        </Form.Item>
+
         <Form.Item
           name="nickname"
           label="昵称"
-          rules={[{ required: false, message: '请输入' }]}
+          rules={[{ required: true, message: '请输入' }]}
         >
           <Input placeholder="请输入昵称" />
         </Form.Item>

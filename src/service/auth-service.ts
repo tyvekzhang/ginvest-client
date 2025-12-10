@@ -2,6 +2,16 @@ import httpClient from '@/lib/http';
 import { StandardResponse } from '@/lib/http/types';
 import { EmailAndCodeRequest, OAuth2PasswordRequestForm, SendVerificationCodeRequest, UserCredential, UserInfo, UserRegisterRequest } from '@/types/auth';
 
+export function resetPassword(id: string, newPassword: string) {
+  const data = {
+    id: id,
+    new_password: newPassword,
+  };
+  return httpClient.post<void>(
+    '/auth:resetPassword', data
+  );
+}
+
 export function fetchUserInfo() {
   return httpClient.get<UserInfo>(
     '/users:me',
