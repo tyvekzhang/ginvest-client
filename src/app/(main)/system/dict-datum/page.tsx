@@ -50,8 +50,8 @@ const DictDatumPage: React.FC = () => {
   // 配置模块
   const actionConfig = {
     showCreate: true,
-    showImport: true,
-    showExport: true,
+    showImport: false,
+    showExport: false,
     showModify: false,
     showRemove: true,
   };

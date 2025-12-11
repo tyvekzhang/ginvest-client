@@ -57,9 +57,6 @@ const QueryDictTypeComponent: React.FC<QueryDictTypeProps> = ({
         <Form.Item name="name" label="字典名称">
           <Input placeholder="请输入字典名称" allowClear />
         </Form.Item>
-        <Form.Item name="type" label="字典类型">
-          <Select placeholder="请选择字典类型" allowClear />
-        </Form.Item>
         <Form.Item name="create_time" label="创建时间">
           <DatePicker
             allowClear

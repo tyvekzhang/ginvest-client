@@ -237,6 +237,12 @@ const UserPage: React.FC = () => {
     }
   };
 
+  const colorMap: Record<string, string> = {
+    '0': 'red',
+    '1': 'green',
+    '2': 'blue'
+  };
+
   // 表格列信息
   const userColumns: ColumnsType<User> = [
     {
@@ -275,19 +281,25 @@ const UserPage: React.FC = () => {
       render: (text) => {
         const values =
           text !== undefined && text !== null ? String(text).split(',') : [];
+
         return values.map((value, index) => {
+
+          const tagColor = colorMap[value] || 'default';
+
           const item = dictData['user_status'].find((d) => d.value === value);
+
           if (item) {
             const content = <span key={item.value}>{item.label}</span>;
+
             return index < values.length - 1 ? (
               <React.Fragment key={`${item.value}-with-comma`}>
-                <Tag color="blue" bordered={false}>
+                <Tag color={tagColor} bordered={false}>
                   {content}
                 </Tag>
                 ,&nbsp;
               </React.Fragment>
             ) : (
-              <Tag color="blue" bordered={false}>
+              <Tag color={tagColor} bordered={false}>
                 {content}
               </Tag>
             );

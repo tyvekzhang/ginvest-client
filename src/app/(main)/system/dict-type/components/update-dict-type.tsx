@@ -94,13 +94,6 @@ const UpdateDictTypeComponent: React.FC<UpdateDictTypeProps> = ({
           <Input placeholder="请输入字典类型" />
         </Form.Item>
         <Form.Item
-          name="status"
-          label="状态"
-          rules={[{ required: false, message: '请输入' }]}
-        >
-          <Radio.Group options={['请选择字典生成']} />
-        </Form.Item>
-        <Form.Item
           name="comment"
           label="备注"
           rules={[{ required: false, message: '请输入' }]}

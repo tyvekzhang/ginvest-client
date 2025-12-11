@@ -49,8 +49,8 @@ const QueryDictDatumComponent: React.FC<QueryDictDatumProps> = ({
       onFinish={onQueryDictDatumFinish}
     >
       <div className="flex flex-wrap items-center gap-2 pt-6 justify-between">
-        <Form.Item name="type" label="字典名">
-          <Input placeholder="请输入字典名" />
+        <Form.Item name="type" label="字典类型">
+          <Input placeholder="请输入字典类型" disabled/>
         </Form.Item>
         <Form.Item name="label" label="字典标签">
           <Input placeholder="请输入字典标签" allowClear />
