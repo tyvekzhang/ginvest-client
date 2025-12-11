@@ -1,7 +1,7 @@
 import IconPicker from '@/components/assist/icon-picker';
 import { CreateMenu } from '@/types/menu';
 import { TreeSelectUtil } from '@/utils/select-util';
-import { Button, Form, Input, Modal, Radio, TreeSelect } from 'antd';
+import { Button, Form, Input, message, Modal, Radio, TreeSelect } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import React, { useEffect, useMemo } from 'react';
 
@@ -99,7 +99,7 @@ const CreateMenuComponent: React.FC<CreateMenuProps> = ({
           </Radio.Group>
         </Form.Item>
 
-        <Form.Item label="菜单图标" name="icon">
+        <Form.Item label="菜单图标" name="icon" rules={[{ required: true, message: '请选择菜单图标' }]}>
           <IconPicker onChange={handleIconChange} />
         </Form.Item>
 
@@ -111,15 +111,16 @@ const CreateMenuComponent: React.FC<CreateMenuProps> = ({
         >
           <Input placeholder="请输入菜单名称" />
         </Form.Item>
-
         <Form.Item
-          label="显示排序"
-          name="sort"
+          label="权限标识"
+          name="permission"
           required
-          rules={[{ required: true, message: '请输入显示排序' }]}
+          rules={[{ required: true, message: '请输入权限标识' }]}
         >
-          <Input placeholder="请输入显示排序" />
+          <Input placeholder="请输入菜单名称" />
         </Form.Item>
+
+
 
         <Form.Item label="是否外链" name="is_external">
           <Radio.Group>
@@ -153,7 +154,14 @@ const CreateMenuComponent: React.FC<CreateMenuProps> = ({
         >
           <Input placeholder="请输入路由地址" />
         </Form.Item>
-
+        <Form.Item
+          label="显示排序"
+          name="sort"
+          required
+          rules={[{ required: true, message: '请输入显示排序' }]}
+        >
+          <Input placeholder="请输入显示排序" />
+        </Form.Item>
         <Form.Item label="显示状态" name="visible">
           <Radio.Group>
             <Radio value={1}>显示</Radio>

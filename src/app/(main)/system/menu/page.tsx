@@ -204,6 +204,7 @@ const MenuPage: React.FC = () => {
             onConfirm={() => handleDeleteMenu(record)}
             okText="确认"
             cancelText="取消"
+            icon={<Trash2 style={{ color: 'red' }} className='h-4 w-4 pr-0.5 pt-1' />}
           >
             <button
               type="button"

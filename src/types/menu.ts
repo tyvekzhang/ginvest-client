@@ -24,6 +24,8 @@ export interface AppMenu {
 }
 
 export interface ListMenusRequest extends PaginationRequest {
+
+  parent_id: string;
   /** 名称 */
   name: string;
 
@@ -60,7 +62,7 @@ export interface Menu {
   create_time: string;
 }
 
-export interface MenuDetail extends Menu {}
+export interface MenuDetail extends Menu { }
 
 export interface CreateMenu {
   /** 名称 */
@@ -185,7 +187,7 @@ export interface BatchDeleteMenusRequest {
   ids: string[];
 }
 
-export interface ExportMenu extends Menu {}
+export interface ExportMenu extends Menu { }
 
 export interface ExportMenusRequest {
   ids: string[];

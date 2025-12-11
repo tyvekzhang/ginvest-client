@@ -22,6 +22,7 @@ const QueryMenuComponent: React.FC<QueryMenuProps> = ({
   const handleQueryMenuReset = () => {
     onQueryMenuReset();
     onQueryMenuForm.resetFields();
+    handleQueryMenuSubmit();
   };
 
   const handleQueryMenuSubmit = async () => {
@@ -52,7 +53,7 @@ const QueryMenuComponent: React.FC<QueryMenuProps> = ({
           label="名称"
           rules={[{ required: false, message: '请输入名称' }]}
         >
-          <Input placeholder="请输入名称" />
+          <Input placeholder="请输入名称" allowClear />
         </Form.Item>
 
         <Form.Item
