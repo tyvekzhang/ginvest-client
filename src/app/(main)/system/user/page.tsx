@@ -66,7 +66,7 @@ const UserPage: React.FC = () => {
   const actionConfig = {
     showCreate: true,
     showImport: false,
-    showExport: true,
+    showExport: false,
     showModify: false,
     showRemove: true,
   };

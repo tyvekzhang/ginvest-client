@@ -16,6 +16,7 @@ export function Logo() {
           src="/logo.png"
           alt="Logo"
           height={24}
+          width={24}
           className="object-contain"
         />
       ) : (
