@@ -4,7 +4,7 @@ interface ApiResponse<T = any> {
   data?: T; 
 }
 
-export interface OrderItem {
+export interface SortItem {
   field: string;
   order: 'asc' | 'desc';
 }

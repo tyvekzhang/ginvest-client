@@ -1,4 +1,4 @@
-export type TimePeriod = "1year" | "3years" | "5years" | "10years"
+
 
 export interface CompanyData {
   rank: number

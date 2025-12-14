@@ -1,24 +1,26 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect } from "react"
 import { Card, Button, Select, Spin } from "antd"
+
 import { ArrowLeft } from "lucide-react"
 import { useRouter, useParams, useSearchParams } from "next/navigation"
-import { generateDetailData, getCompanyByCode, type TimePeriod } from "@/lib/mock-data"
+import { useStockCompany } from '@/service/stock'
+import { useReportRevenueCycle } from '@/service/report-income-statement'
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
 
 export default function DetailPage() {
   const router = useRouter()
   const params = useParams()
   const searchParams = useSearchParams()
-  const code = params.code as string
-  const initialPeriod = (searchParams.get("period") as TimePeriod) || "1year"
+  const stock_code = params.stock_code as string
+  const initialPeriod = searchParams.get('period') ? Number(searchParams.get('period')) : 3
 
-  const [timePeriod, setTimePeriod] = useState<TimePeriod>(initialPeriod)
+  const [timePeriod, setTimePeriod] = useState<number>(initialPeriod)
   const [loading, setLoading] = useState(true)
 
-  const company = useMemo(() => getCompanyByCode(code, timePeriod), [code, timePeriod])
-  const detailData = useMemo(() => generateDetailData(code, timePeriod), [code, timePeriod])
+  const { company } = useStockCompany(stock_code)
+  const { revenueCycleList } = useReportRevenueCycle(stock_code, timePeriod)
 
   useEffect(() => {
     setLoading(true)
@@ -29,18 +31,14 @@ export default function DetailPage() {
   }, [timePeriod])
 
   const periodOptions = [
-    { label: "近一年", value: "1year" },
-    { label: "近三年", value: "3years" },
-    { label: "近五年", value: "5years" },
-    { label: "近十年", value: "10years" },
+    { label: "近一年", value: 1 },
+    { label: "近三年", value: 3 },
+    { label: "近五年", value: 5 },
+    { label: "近十年", value: 10 },
+    { label: "近十五年", value: 15 },
+    { label: "近二十年", value: 20 },
   ]
 
-  const periodLabels = {
-    "1year": ["Q1", "Q2", "Q3", "Q4"],
-    "3years": ["2022", "2023", "2024"],
-    "5years": ["2020", "2021", "2022", "2023", "2024"],
-    "10years": ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024"],
-  }
 
   if (!company) {
     return (
@@ -59,21 +57,21 @@ export default function DetailPage() {
     <div className="min-h-full bg-white p-4">
       <div className="max-w-[1400px] mx-auto">
         <div className="mb-2">
-          <Button 
-            icon={<ArrowLeft size={16} />} 
-            onClick={() => router.back()} 
+          <Button
+            icon={<ArrowLeft size={16} />}
+            onClick={() => router.back()}
             className="flex items-center gap-2"
           >
-            返回列表
+            返回
           </Button>
         </div>
 
-        <Card className="mb-1">
+        <Card >
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center ">
             <div>
-              <h1 className="text-xl md:text-3xl font-bold mb-2">{company.name}</h1>
+              <h1 className="text-xl md:text-2xl font-bold mb-2">{company.stock_name}</h1>
               <p className="text-gray-600 text-base">
-                股票代码: {company.code} | 行业: {company.industry}
+                股票代码: {company.stock_code} | 行业: {company.industry}
               </p>
             </div>
             <Select
@@ -96,9 +94,9 @@ export default function DetailPage() {
             <h2 className="text-xl font-bold mb-2">营业收入与同比增长率趋势图</h2>
             <div className="w-full h-[480]">
               <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={detailData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                <ComposedChart data={revenueCycleList} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="period" />
+                  <XAxis dataKey="cycle" />
                   <YAxis
                     yAxisId="left"
                     label={{ value: "营业收入 (亿)", angle: -90, position: "insideLeft" }}
@@ -112,11 +110,11 @@ export default function DetailPage() {
                   />
                   <Tooltip />
                   <Legend />
-                  <Bar yAxisId="left" dataKey="revenue" fill="#3b82f6" name="营业收入 (亿)" />
+                  <Bar yAxisId="left" dataKey="total_operating_income" fill="#3b82f6" name="营业收入 (亿)" />
                   <Line
                     yAxisId="right"
                     type="monotone"
-                    dataKey="growth"
+                    dataKey="total_operating_income_yoy"
                     stroke="#10b981"
                     strokeWidth={2}
                     name="同比增长率 (%)"

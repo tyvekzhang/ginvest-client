@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 import { PaginationRequest } from '.';
 
+export type TimePeriod = 1 | 3 | 5 | 10 | 15 | 20
+
 export interface ListStocksRequest extends PaginationRequest {
 
     id: string;

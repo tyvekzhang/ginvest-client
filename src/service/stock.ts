@@ -19,6 +19,35 @@ import {
 import { AxiosResponse } from 'axios';
 import useSWR from 'swr';
 
+export function useStockCompany(stock_code: string) {
+  const { data, error, isLoading, isValidating, mutate } = useSWR<Stock>(
+    stock_code ? `/stocks:company/${stock_code}` : null,
+    fetcher,
+  );
+
+  return {
+    company: data,
+    isLoading,
+    isError: error,
+    isValidating,
+    mutateMenu: mutate,
+  };
+}
+
+export function useIndustry() {
+  const { data, error, isLoading, isValidating, mutate } = useSWR<string[]>(
+    `/stocks:industry`,
+    fetcher,
+  );
+
+  return {
+    industryList: data,
+    isLoading,
+    isError: error,
+    isValidating,
+    mutateMenu: mutate,
+  };
+}
 
 /**
  * Retrieve stock details.
