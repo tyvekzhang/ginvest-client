@@ -2,7 +2,7 @@
 import httpClient, { fetcher } from '@/lib/http';
 import { downloadBlob } from '@/service/util';
 import { PageResult } from '@/types';
-import { RevenueCycleReponse } from '@/types/report-income-statement';
+import { ProfitCycleReponse, RevenueCycleReponse } from '@/types/report-income-statement';
 import {
   BatchCreateReportIncomeStatementsRequest,
   BatchDeleteReportIncomeStatementsRequest,
@@ -19,6 +19,21 @@ import {
 } from '@/types/report-income-statement';
 import { AxiosResponse } from 'axios';
 import useSWR from 'swr';
+
+export function useReportProfitCycle(stock_code: string, period: number) {
+  const { data, error, isLoading, isValidating, mutate } = useSWR<ProfitCycleReponse>(
+    `/reportIncomeStatements:periodProfit?stock_code=${stock_code}&period=${period}`,
+    fetcher,
+  );
+
+  return {
+    profitCycleList: data,
+    isLoading,
+    isError: error,
+    isValidating,
+    mutateMenu: mutate,
+  };
+}
 
 export function useReportRevenueCycle(stock_code: string, period: number) {
   const { data, error, isLoading, isValidating, mutate } = useSWR<RevenueCycleReponse>(

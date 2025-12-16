@@ -6,10 +6,10 @@ import type { TabsProps, TableColumnsType } from "antd";
 import { BarChart3, TableIcon, Eye, Medal, Award, Crown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
-  useRankingRevenues,
-} from "@/service/ranking-revenue";
+  useRankingProfits,
+} from "@/service/ranking-profit";
 import { createPaginationRequest, SortItem } from "@/types";
-import { RankingRevenue } from "@/types/ranking-revenue";
+import { RankingProfit } from "@/types/ranking-profit";
 import {
   BarChart,
   Bar,
@@ -55,14 +55,14 @@ export default function RevenueRankingPage() {
       order: 'asc'
     }
   ]
-  const { rankingRevenues, total, isLoading } = useRankingRevenues({
+  const { rankingProfits, total, isLoading } = useRankingProfits({
     query_period: queryPeriod,
     industry,
     ...createPaginationRequest(current, pageSize, JSON.stringify(sortList)),
   });
 
   /** 表格列 */
-  const columns: TableColumnsType<RankingRevenue> = [
+  const columns: TableColumnsType<RankingProfit> = [
     {
       title: '主键',
       dataIndex: 'id',
@@ -114,24 +114,24 @@ export default function RevenueRankingPage() {
     {
       title: "公司名称",
       dataIndex: "stock_name",
-      width: "10%",
+      width: "8%",
       ellipsis: true,
     },
     {
       title: "行业",
       dataIndex: "industry",
-      width: '16%',
+      width: '14%',
       ellipsis: true,
     },
     {
-      title: "总营业收入(元)",
-      dataIndex: "total_revenue",
+      title: "总净利润(元)",
+      dataIndex: "total_profit",
       align: "right",
       render: (v: number) => v.toLocaleString(),
     },
     {
-      title: "营业平均收入(元)",
-      dataIndex: "avg_revenue",
+      title: "平均净利润(元)",
+      dataIndex: "avg_profit",
       key: "avg_revenue",
       align: "right",
       render: (v: number) => v.toLocaleString(),
@@ -145,13 +145,21 @@ export default function RevenueRankingPage() {
       render: (text) => (text ? `${text}` : "-"),
     },
     {
+      title: "现金流量比率",
+      dataIndex: "cash_flow_ratio",
+      key: "cagr",
+      align: "right",
+      width: "12%",
+      render: (text) => (text ? `${text}` : "-"),
+    },
+    {
       title: "操作",
       render: (_, record) => (
         <button
           className="flex items-center justify-center gap-1 text-sm btn-operation cursor-pointer"
           onClick={() =>
             router.push(
-              `/ranking/revenue/detail/${record.stock_code}?period=${queryPeriod}`,
+              `/ranking/profit/detail/${record.stock_code}?period=${queryPeriod}`,
             )
           }
         >
@@ -165,14 +173,14 @@ export default function RevenueRankingPage() {
   /** 图表数据 */
   const chartData = useMemo(
     () =>
-      (rankingRevenues || []).map((item) => ({
+      (rankingProfits || []).map((item) => ({
         name:
           item.stock_name.length > 6
             ? item.stock_name.slice(0, 6) + "..."
             : item.stock_name,
-        营业收入: Math.round(item.total_revenue / 1e8),
+        净利润: Math.round(item.total_profit / 1e8),
       })),
-    [rankingRevenues],
+    [rankingProfits],
   );
 
   const tabItems: TabsProps["items"] = [
@@ -187,7 +195,7 @@ export default function RevenueRankingPage() {
         <>
           <Table
             columns={columns}
-            dataSource={rankingRevenues || []}
+            dataSource={rankingProfits || []}
             rowKey="id"
             loading={isLoading}
             pagination={false}
@@ -216,10 +224,10 @@ export default function RevenueRankingPage() {
             <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} tick={{ fontSize: 12 }} />
-              <YAxis stroke="#3b82f6" label={{ value: "营业收入 (亿)", angle: -90, position: "insideLeft" }} />
-              <Tooltip formatter={(value: number) => [`${value}亿`, "营业收入"]} />
+              <YAxis stroke="#3b82f6" label={{ value: "净利润 (亿)", angle: -90, position: "insideLeft" }} />
+              <Tooltip formatter={(value: number) => [`${value}亿`, "净利润"]} />
               <Legend wrapperStyle={{ paddingTop: 20 }} />
-              <Bar dataKey="营业收入" fill="#3b82f6" name="营业收入" />
+              <Bar dataKey="净利润" fill="#3b82f6" name="净利润" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -232,7 +240,7 @@ export default function RevenueRankingPage() {
       <Card>
         <div className="flex justify-between mb-4">
           <div>
-            <h2 className="text-xl font-semibold">营业收入排行榜</h2>
+            <h2 className="text-xl font-semibold">净利润排行榜</h2>
           </div>
           <Space>
             <Select

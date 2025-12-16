@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: MIT
 import { PaginationRequest } from '.';
 
+export interface ProfitCycleReponse {
+    cycle: string
+    net_profit: number
+    net_profit_yoy: number
+}
+
 export interface RevenueCycleReponse {
     cycle: string
     total_operating_income: number
