@@ -20,6 +20,21 @@ import {
 import { AxiosResponse } from 'axios';
 import useSWR from 'swr';
 
+export function useReportCashCycle(stock_code: string, period: number) {
+  const { data, error, isLoading, isValidating, mutate } = useSWR<RevenueCycleReponse>(
+    `/reportIncomeStatements:periodCash?stock_code=${stock_code}&period=${period}`,
+    fetcher,
+  );
+
+  return {
+    cashCycleList: data,
+    isLoading,
+    isError: error,
+    isValidating,
+    mutateMenu: mutate,
+  };
+}
+
 export function useReportProfitCycle(stock_code: string, period: number) {
   const { data, error, isLoading, isValidating, mutate } = useSWR<ProfitCycleReponse>(
     `/reportIncomeStatements:periodProfit?stock_code=${stock_code}&period=${period}`,

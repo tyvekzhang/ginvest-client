@@ -26,7 +26,6 @@ import {
 } from '@/types/report-income-statement';
 import { Form, message, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import dayjs from 'dayjs';
 import { Eye, MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
@@ -40,14 +39,14 @@ import UpdateReportIncomeStatementComponent from './components/update-report-inc
 const ReportIncomeStatementPage: React.FC = () => {
   // 配置模块
   const actionConfig = {
-    showCreate: true,
-    showImport: true,
+    showCreate: false,
+    showImport: false,
     showExport: true,
-    showModify: true,
-    showRemove: true,
+    showModify: false,
+    showRemove: false,
   };
   const showMore = false;
-  
+
 
   // 查询模块
   const [isQueryReportIncomeStatementShow, setIsQueryReportIncomeStatementShow] = useState<boolean>(true);
@@ -141,70 +140,78 @@ const ReportIncomeStatementPage: React.FC = () => {
       dataIndex: "No",
       key: "No",
       render: (_: number, _record: ReportIncomeStatement, rowIndex: number) => rowIndex + 1,
-      width: "8%",
-    },
-    {
-      title: "股票代码",
-      dataIndex: "stock_code",
-      key: "stock_code",
-      render: (text) => (text ? text : "-"),
-      width: "12%",
-      ellipsis: true,
+      width: 60,
     },
     {
       title: "股票简称",
       dataIndex: "stock_name",
       key: "stock_name",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 100,
+      fixed: 'left',
+      ellipsis: true,
+    },
+    {
+      title: "股票代码",
+      dataIndex: "stock_code",
+      key: "stock_code",
+      render: (text) => (text ? text : "-"),
+      width: 100,
       ellipsis: true,
     },
     {
       title: "净利润",
       dataIndex: "net_profit",
       key: "net_profit",
-      width: "6%",
+      render: (text) => (text ? text : "-"),
+      width: 120,
     },
     {
       title: "净利润同比",
       dataIndex: "net_profit_yoy",
       key: "net_profit_yoy",
-      width: "6%",
+      render: (text) => (text ? text : "-"),
+      width: 120,
     },
     {
       title: "营业总收入",
       dataIndex: "total_operating_income",
       key: "total_operating_income",
-      width: "6%",
+      render: (text) => (text ? text : "-"),
+      width: 120,
     },
     {
       title: "营业总收入同比",
       dataIndex: "total_operating_income_yoy",
       key: "total_operating_income_yoy",
-      width: "6%",
-    },
-    {
-      title: "年份",
-      dataIndex: "year",
-      key: "year",
-      width: "6%",
+      render: (text) => (text ? text : "-"),
+      width: 120,
     },
     {
       title: "季度",
       dataIndex: "quarter",
       key: "quarter",
-      width: "6%",
+      width: 60,
+    },
+    {
+      title: "年份",
+      dataIndex: "year",
+      key: "year",
+      fixed: 'right',
+      width: 60,
     },
     {
       title: "操作",
       key: "action",
       align: "center",
+      fixed: 'right',
+      width: 160,
       render: (_, record) => (
         <div className="flex gap-2 items-center justify-center">
           <button
             type="button"
             className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={ () => onReportIncomeStatementDetail(record)}
+            onClick={() => onReportIncomeStatementDetail(record)}
           >
             <Eye className="w-3 h-3" />
             详情
@@ -212,7 +219,7 @@ const ReportIncomeStatementPage: React.FC = () => {
           <button
             type="button"
             className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={ () => onUpdateReportIncomeStatement(record)}
+            onClick={() => onUpdateReportIncomeStatement(record)}
           >
             <PenLine className="w-3 h-3" />
             编辑
@@ -480,8 +487,8 @@ const ReportIncomeStatementPage: React.FC = () => {
       </TransitionWrapper>
       <div>
         <ActionButtonComponent
-          onCreate={onCreateReportIncomeStatement }
-          onImport={onImportReportIncomeStatement }
+          onCreate={onCreateReportIncomeStatement}
+          onImport={onImportReportIncomeStatement}
           onExport={onReportIncomeStatementExport}
           onBatchModify={onReportIncomeStatementBatchModify}
           onConfirmBatchRemove={handleReportIncomeStatementBatchRemove}
@@ -493,7 +500,7 @@ const ReportIncomeStatementPage: React.FC = () => {
           isBatchRemoveDisabled={selectedRowKeys.length === 0}
           isBatchRemoveLoading={isBatchRemoveLoading}
           isExportLoading={isExportLoading}
-          rawColumns={ reportIncomeStatementColumns as any[]}
+          rawColumns={reportIncomeStatementColumns as any[]}
           visibleColumns={visibleColumns as any[]}
           onToggleColumnVisibility={onToggleColumnVisibility}
           actionConfig={actionConfig}
@@ -503,7 +510,7 @@ const ReportIncomeStatementPage: React.FC = () => {
       <div>
         <PaginatedTable<ReportIncomeStatement>
           columns={filteredReportIncomeStatementColumns}
-          dataSource={ reportIncomeStatementListDataSource || []}
+          dataSource={reportIncomeStatementListDataSource || []}
           total={total || 0}
           current={current}
           page_size={pageSize}
@@ -512,6 +519,7 @@ const ReportIncomeStatementPage: React.FC = () => {
           selectedRowKeys={selectedRowKeys}
           rowKey="id"
           loading={isReportIncomeStatementListLoading}
+          scroll={{ x: 1500 }}
         />
       </div>
       <div>
@@ -528,7 +536,7 @@ const ReportIncomeStatementPage: React.FC = () => {
           <ReportIncomeStatementDetailComponent
             isReportIncomeStatementDetailDrawerVisible={isReportIncomeStatementDetailDrawerVisible}
             onReportIncomeStatementDetailClose={onReportIncomeStatementDetailClose}
-            reportIncomeStatementDetail={ reportIncomeStatementDetail}
+            reportIncomeStatementDetail={reportIncomeStatementDetail}
             loading={isReportIncomeStatementDetailLoading}
           />
         </div>
@@ -547,7 +555,7 @@ const ReportIncomeStatementPage: React.FC = () => {
             onBatchUpdateReportIncomeStatementsCancel={handleBatchUpdateReportIncomeStatementsCancel}
             onBatchUpdateReportIncomeStatementsFinish={handleBatchUpdateReportIncomeStatementsFinish}
             isBatchUpdateReportIncomeStatementsLoading={isBatchUpdateReportIncomeStatementsLoading}
-            batchUpdateReportIncomeStatementsForm={ batchUpdateReportIncomeStatementsForm}
+            batchUpdateReportIncomeStatementsForm={batchUpdateReportIncomeStatementsForm}
           />
         </div>
 
@@ -557,7 +565,7 @@ const ReportIncomeStatementPage: React.FC = () => {
             isImportReportIncomeStatementLoading={isImportReportIncomeStatementLoading}
             onImportReportIncomeStatementFinish={onImportReportIncomeStatementFinish}
             onImportReportIncomeStatementCancel={handleImportReportIncomeStatementCancel}
-            handleImportReportIncomeStatement={handleImportReportIncomeStatement }
+            handleImportReportIncomeStatement={handleImportReportIncomeStatement}
           />
         </div>
       </div>

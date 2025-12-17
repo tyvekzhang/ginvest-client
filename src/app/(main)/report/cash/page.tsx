@@ -40,14 +40,14 @@ import UpdateReportCashFlowComponent from './components/update-report-cash-flow'
 const ReportCashFlowPage: React.FC = () => {
   // 配置模块
   const actionConfig = {
-    showCreate: true,
-    showImport: true,
+    showCreate: false,
+    showImport: false,
     showExport: true,
-    showModify: true,
-    showRemove: true,
+    showModify: false,
+    showRemove: false,
   };
   const showMore = false;
-  
+
 
   // 查询模块
   const [isQueryReportCashFlowShow, setIsQueryReportCashFlowShow] = useState<boolean>(true);
@@ -141,30 +141,25 @@ const ReportCashFlowPage: React.FC = () => {
       dataIndex: "No",
       key: "No",
       render: (_: number, _record: ReportCashFlow, rowIndex: number) => rowIndex + 1,
-      width: "8%",
+      width: 60,
+      fixed: 'left',
+    },
+
+    {
+      title: "股票简称",
+      dataIndex: "stock_name",
+      key: "stock_name",
+      render: (text) => (text ? text : "-"),
+      width: 120,
+      fixed: 'left',
+      ellipsis: true,
     },
     {
       title: "股票代码",
       dataIndex: "stock_code",
       key: "stock_code",
       render: (text) => (text ? text : "-"),
-      width: "12%",
-      ellipsis: true,
-    },
-    {
-      title: "股票简称",
-      dataIndex: "stock_name",
-      key: "stock_name",
-      render: (text) => (text ? text : "-"),
-      width: "12%",
-      ellipsis: true,
-    },
-    {
-      title: "交易所",
-      dataIndex: "exchange",
-      key: "exchange",
-      render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 120,
       ellipsis: true,
     },
     {
@@ -172,7 +167,7 @@ const ReportCashFlowPage: React.FC = () => {
       dataIndex: "net_cash_flow",
       key: "net_cash_flow",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 140,
       ellipsis: true,
     },
     {
@@ -180,7 +175,7 @@ const ReportCashFlowPage: React.FC = () => {
       dataIndex: "net_cash_flow_yoy",
       key: "net_cash_flow_yoy",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 140,
       ellipsis: true,
     },
     {
@@ -188,7 +183,7 @@ const ReportCashFlowPage: React.FC = () => {
       dataIndex: "operating_cash_flow",
       key: "operating_cash_flow",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 140,
       ellipsis: true,
     },
     {
@@ -196,7 +191,7 @@ const ReportCashFlowPage: React.FC = () => {
       dataIndex: "operating_cash_flow_ratio",
       key: "operating_cash_flow_ratio",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 140,
       ellipsis: true,
     },
     {
@@ -204,7 +199,7 @@ const ReportCashFlowPage: React.FC = () => {
       dataIndex: "investing_cash_flow",
       key: "investing_cash_flow",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 140,
       ellipsis: true,
     },
     {
@@ -212,7 +207,7 @@ const ReportCashFlowPage: React.FC = () => {
       dataIndex: "investing_cash_flow_ratio",
       key: "investing_cash_flow_ratio",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 140,
       ellipsis: true,
     },
     {
@@ -220,7 +215,7 @@ const ReportCashFlowPage: React.FC = () => {
       dataIndex: "financing_cash_flow",
       key: "financing_cash_flow",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 140,
       ellipsis: true,
     },
     {
@@ -228,31 +223,35 @@ const ReportCashFlowPage: React.FC = () => {
       dataIndex: "financing_cash_flow_ratio",
       key: "financing_cash_flow_ratio",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 140,
       ellipsis: true,
+    },
+
+    {
+      title: "季度",
+      dataIndex: "quarter",
+      key: "quarter",
+      width: 60,
     },
     {
       title: "年份",
       dataIndex: "year",
       key: "year",
-      width: "6%",
-    },
-    {
-      title: "季度",
-      dataIndex: "quarter",
-      key: "quarter",
-      width: "6%",
+      fixed: 'right',
+      width: 80,
     },
     {
       title: "操作",
       key: "action",
       align: "center",
+      fixed: 'right',
+      width: 180,
       render: (_, record) => (
         <div className="flex gap-2 items-center justify-center">
           <button
             type="button"
             className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={ () => onReportCashFlowDetail(record)}
+            onClick={() => onReportCashFlowDetail(record)}
           >
             <Eye className="w-3 h-3" />
             详情
@@ -260,7 +259,7 @@ const ReportCashFlowPage: React.FC = () => {
           <button
             type="button"
             className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={ () => onUpdateReportCashFlow(record)}
+            onClick={() => onUpdateReportCashFlow(record)}
           >
             <PenLine className="w-3 h-3" />
             编辑
@@ -528,8 +527,8 @@ const ReportCashFlowPage: React.FC = () => {
       </TransitionWrapper>
       <div>
         <ActionButtonComponent
-          onCreate={onCreateReportCashFlow }
-          onImport={onImportReportCashFlow }
+          onCreate={onCreateReportCashFlow}
+          onImport={onImportReportCashFlow}
           onExport={onReportCashFlowExport}
           onBatchModify={onReportCashFlowBatchModify}
           onConfirmBatchRemove={handleReportCashFlowBatchRemove}
@@ -541,7 +540,7 @@ const ReportCashFlowPage: React.FC = () => {
           isBatchRemoveDisabled={selectedRowKeys.length === 0}
           isBatchRemoveLoading={isBatchRemoveLoading}
           isExportLoading={isExportLoading}
-          rawColumns={ reportCashFlowColumns as any[]}
+          rawColumns={reportCashFlowColumns as any[]}
           visibleColumns={visibleColumns as any[]}
           onToggleColumnVisibility={onToggleColumnVisibility}
           actionConfig={actionConfig}
@@ -551,7 +550,7 @@ const ReportCashFlowPage: React.FC = () => {
       <div>
         <PaginatedTable<ReportCashFlow>
           columns={filteredReportCashFlowColumns}
-          dataSource={ reportCashFlowListDataSource || []}
+          dataSource={reportCashFlowListDataSource || []}
           total={total || 0}
           current={current}
           page_size={pageSize}
@@ -560,6 +559,7 @@ const ReportCashFlowPage: React.FC = () => {
           selectedRowKeys={selectedRowKeys}
           rowKey="id"
           loading={isReportCashFlowListLoading}
+          scroll={{ x: 1500 }}
         />
       </div>
       <div>
@@ -576,7 +576,7 @@ const ReportCashFlowPage: React.FC = () => {
           <ReportCashFlowDetailComponent
             isReportCashFlowDetailDrawerVisible={isReportCashFlowDetailDrawerVisible}
             onReportCashFlowDetailClose={onReportCashFlowDetailClose}
-            reportCashFlowDetail={ reportCashFlowDetail}
+            reportCashFlowDetail={reportCashFlowDetail}
             loading={isReportCashFlowDetailLoading}
           />
         </div>
@@ -595,7 +595,7 @@ const ReportCashFlowPage: React.FC = () => {
             onBatchUpdateReportCashFlowsCancel={handleBatchUpdateReportCashFlowsCancel}
             onBatchUpdateReportCashFlowsFinish={handleBatchUpdateReportCashFlowsFinish}
             isBatchUpdateReportCashFlowsLoading={isBatchUpdateReportCashFlowsLoading}
-            batchUpdateReportCashFlowsForm={ batchUpdateReportCashFlowsForm}
+            batchUpdateReportCashFlowsForm={batchUpdateReportCashFlowsForm}
           />
         </div>
 
@@ -605,7 +605,7 @@ const ReportCashFlowPage: React.FC = () => {
             isImportReportCashFlowLoading={isImportReportCashFlowLoading}
             onImportReportCashFlowFinish={onImportReportCashFlowFinish}
             onImportReportCashFlowCancel={handleImportReportCashFlowCancel}
-            handleImportReportCashFlow={handleImportReportCashFlow }
+            handleImportReportCashFlow={handleImportReportCashFlow}
           />
         </div>
       </div>

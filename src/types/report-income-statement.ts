@@ -7,6 +7,12 @@ export interface ProfitCycleReponse {
     net_profit_yoy: number
 }
 
+export interface CashCycleReponse {
+    cycle: string
+    total_cash: number
+    total_cash_yoy: number
+}
+
 export interface RevenueCycleReponse {
     cycle: string
     total_operating_income: number

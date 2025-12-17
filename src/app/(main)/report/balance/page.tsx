@@ -26,7 +26,6 @@ import {
 } from '@/types/report-balance-sheet';
 import { Form, message, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import dayjs from 'dayjs';
 import { Eye, MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
 import type { RcFile } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
@@ -40,14 +39,14 @@ import UpdateReportBalanceSheetComponent from './components/update-report-balanc
 const ReportBalanceSheetPage: React.FC = () => {
   // 配置模块
   const actionConfig = {
-    showCreate: true,
-    showImport: true,
+    showCreate: false,
+    showImport: false,
     showExport: true,
-    showModify: true,
-    showRemove: true,
+    showModify: false,
+    showRemove: false,
   };
   const showMore = false;
-  
+
 
   // 查询模块
   const [isQueryReportBalanceSheetShow, setIsQueryReportBalanceSheetShow] = useState<boolean>(true);
@@ -141,30 +140,24 @@ const ReportBalanceSheetPage: React.FC = () => {
       dataIndex: "No",
       key: "No",
       render: (_: number, _record: ReportBalanceSheet, rowIndex: number) => rowIndex + 1,
-      width: "8%",
-    },
-    {
-      title: "股票代码",
-      dataIndex: "stock_code",
-      key: "stock_code",
-      render: (text) => (text ? text : "-"),
-      width: "12%",
-      ellipsis: true,
+      width: 60,
+      fixed: 'left',
     },
     {
       title: "股票简称",
       dataIndex: "stock_name",
       key: "stock_name",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 120,
+      fixed: 'left',
       ellipsis: true,
     },
     {
-      title: "交易所",
-      dataIndex: "exchange",
-      key: "exchange",
+      title: "股票代码",
+      dataIndex: "stock_code",
+      key: "stock_code",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 120,
       ellipsis: true,
     },
     {
@@ -172,7 +165,7 @@ const ReportBalanceSheetPage: React.FC = () => {
       dataIndex: "asset_cash",
       key: "asset_cash",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 140,
       ellipsis: true,
     },
     {
@@ -180,15 +173,15 @@ const ReportBalanceSheetPage: React.FC = () => {
       dataIndex: "asset_receivables",
       key: "asset_receivables",
       render: (text) => (text ? text : "-"),
-      width: "12%",
       ellipsis: true,
+      width: 140,
     },
     {
       title: "资产-存货",
       dataIndex: "asset_inventory",
       key: "asset_inventory",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 140,
       ellipsis: true,
     },
     {
@@ -196,7 +189,7 @@ const ReportBalanceSheetPage: React.FC = () => {
       dataIndex: "asset_total",
       key: "asset_total",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 140,
       ellipsis: true,
     },
     {
@@ -204,7 +197,7 @@ const ReportBalanceSheetPage: React.FC = () => {
       dataIndex: "asset_total_yoy",
       key: "asset_total_yoy",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 140,
       ellipsis: true,
     },
     {
@@ -212,7 +205,7 @@ const ReportBalanceSheetPage: React.FC = () => {
       dataIndex: "liability_payables",
       key: "liability_payables",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 140,
       ellipsis: true,
     },
     {
@@ -220,7 +213,7 @@ const ReportBalanceSheetPage: React.FC = () => {
       dataIndex: "liability_total",
       key: "liability_total",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 140,
       ellipsis: true,
     },
     {
@@ -228,7 +221,7 @@ const ReportBalanceSheetPage: React.FC = () => {
       dataIndex: "liability_advance_receipts",
       key: "liability_advance_receipts",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 140,
       ellipsis: true,
     },
     {
@@ -236,7 +229,7 @@ const ReportBalanceSheetPage: React.FC = () => {
       dataIndex: "liability_total_yoy",
       key: "liability_total_yoy",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 140,
       ellipsis: true,
     },
     {
@@ -244,7 +237,7 @@ const ReportBalanceSheetPage: React.FC = () => {
       dataIndex: "asset_liability_ratio",
       key: "asset_liability_ratio",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 140,
       ellipsis: true,
     },
     {
@@ -252,31 +245,34 @@ const ReportBalanceSheetPage: React.FC = () => {
       dataIndex: "shareholder_equity",
       key: "shareholder_equity",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: 140,
       ellipsis: true,
-    },
-    {
-      title: "年份",
-      dataIndex: "year",
-      key: "year",
-      width: "6%",
     },
     {
       title: "季度",
       dataIndex: "quarter",
       key: "quarter",
-      width: "6%",
+      width: 60,
+    },
+    {
+      title: "年份",
+      dataIndex: "year",
+      key: "year",
+      fixed: 'right',
+      width: 80,
     },
     {
       title: "操作",
       key: "action",
       align: "center",
+      fixed: 'right',
+      width: 180,
       render: (_, record) => (
         <div className="flex gap-2 items-center justify-center">
           <button
             type="button"
             className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={ () => onReportBalanceSheetDetail(record)}
+            onClick={() => onReportBalanceSheetDetail(record)}
           >
             <Eye className="w-3 h-3" />
             详情
@@ -284,7 +280,7 @@ const ReportBalanceSheetPage: React.FC = () => {
           <button
             type="button"
             className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={ () => onUpdateReportBalanceSheet(record)}
+            onClick={() => onUpdateReportBalanceSheet(record)}
           >
             <PenLine className="w-3 h-3" />
             编辑
@@ -552,8 +548,8 @@ const ReportBalanceSheetPage: React.FC = () => {
       </TransitionWrapper>
       <div>
         <ActionButtonComponent
-          onCreate={onCreateReportBalanceSheet }
-          onImport={onImportReportBalanceSheet }
+          onCreate={onCreateReportBalanceSheet}
+          onImport={onImportReportBalanceSheet}
           onExport={onReportBalanceSheetExport}
           onBatchModify={onReportBalanceSheetBatchModify}
           onConfirmBatchRemove={handleReportBalanceSheetBatchRemove}
@@ -565,7 +561,7 @@ const ReportBalanceSheetPage: React.FC = () => {
           isBatchRemoveDisabled={selectedRowKeys.length === 0}
           isBatchRemoveLoading={isBatchRemoveLoading}
           isExportLoading={isExportLoading}
-          rawColumns={ reportBalanceSheetColumns as any[]}
+          rawColumns={reportBalanceSheetColumns as any[]}
           visibleColumns={visibleColumns as any[]}
           onToggleColumnVisibility={onToggleColumnVisibility}
           actionConfig={actionConfig}
@@ -575,7 +571,7 @@ const ReportBalanceSheetPage: React.FC = () => {
       <div>
         <PaginatedTable<ReportBalanceSheet>
           columns={filteredReportBalanceSheetColumns}
-          dataSource={ reportBalanceSheetListDataSource || []}
+          dataSource={reportBalanceSheetListDataSource || []}
           total={total || 0}
           current={current}
           page_size={pageSize}
@@ -584,6 +580,7 @@ const ReportBalanceSheetPage: React.FC = () => {
           selectedRowKeys={selectedRowKeys}
           rowKey="id"
           loading={isReportBalanceSheetListLoading}
+          scroll={{ x: 1500 }}
         />
       </div>
       <div>
@@ -600,7 +597,7 @@ const ReportBalanceSheetPage: React.FC = () => {
           <ReportBalanceSheetDetailComponent
             isReportBalanceSheetDetailDrawerVisible={isReportBalanceSheetDetailDrawerVisible}
             onReportBalanceSheetDetailClose={onReportBalanceSheetDetailClose}
-            reportBalanceSheetDetail={ reportBalanceSheetDetail}
+            reportBalanceSheetDetail={reportBalanceSheetDetail}
             loading={isReportBalanceSheetDetailLoading}
           />
         </div>
@@ -619,7 +616,7 @@ const ReportBalanceSheetPage: React.FC = () => {
             onBatchUpdateReportBalanceSheetsCancel={handleBatchUpdateReportBalanceSheetsCancel}
             onBatchUpdateReportBalanceSheetsFinish={handleBatchUpdateReportBalanceSheetsFinish}
             isBatchUpdateReportBalanceSheetsLoading={isBatchUpdateReportBalanceSheetsLoading}
-            batchUpdateReportBalanceSheetsForm={ batchUpdateReportBalanceSheetsForm}
+            batchUpdateReportBalanceSheetsForm={batchUpdateReportBalanceSheetsForm}
           />
         </div>
 
@@ -629,7 +626,7 @@ const ReportBalanceSheetPage: React.FC = () => {
             isImportReportBalanceSheetLoading={isImportReportBalanceSheetLoading}
             onImportReportBalanceSheetFinish={onImportReportBalanceSheetFinish}
             onImportReportBalanceSheetCancel={handleImportReportBalanceSheetCancel}
-            handleImportReportBalanceSheet={handleImportReportBalanceSheet }
+            handleImportReportBalanceSheet={handleImportReportBalanceSheet}
           />
         </div>
       </div>
