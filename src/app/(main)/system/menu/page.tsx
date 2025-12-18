@@ -16,7 +16,7 @@ import {
 } from '@/service/menu';
 import { createPaginationRequest } from '@/types';
 import { CreateMenu, ListMenusRequest, Menu, UpdateMenu } from '@/types/menu';
-import { Form, message, Popconfirm } from 'antd';
+import { Form, message, Popconfirm, Tag } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { format } from 'date-fns';
 import { MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
@@ -162,7 +162,7 @@ const MenuPage: React.FC = () => {
       dataIndex: 'sort',
       key: 'sort',
       render: (text) => (text ? text : '-'),
-      width: '8%',
+      width: '6%',
     },
     {
       title: '路由地址',
@@ -171,6 +171,35 @@ const MenuPage: React.FC = () => {
       render: (text) => (text ? text : '-'),
       ellipsis: true,
       width: '15%',
+    },
+    {
+      title: '状态',
+      dataIndex: 'visible',
+      key: 'path',
+      render: (status) => {
+        let config = {
+          color: 'default',
+          text: '未知',
+        };
+
+        switch (status) {
+          case 0:
+            config = { color: 'orange', text: '排队中' };
+            break;
+          case 1:
+            config = { color: 'success', text: '完成' };
+            break;
+          case 2:
+            config = { color: 'processing', text: '进行中' };
+            break;
+          default:
+            return '-';
+        }
+
+        return <Tag color={config.color}>{config.text}</Tag>;
+      },
+      ellipsis: true,
+      width: '10%',
     },
     {
       title: '创建时间',
@@ -424,7 +453,7 @@ const MenuPage: React.FC = () => {
           onCreate={onCreateMenu}
           onImport={onImportMenu}
           onExport={onMenuExport}
-          onBatchModify={() => {}}
+          onBatchModify={() => { }}
           onConfirmBatchRemove={handleMenuBatchRemove}
           onConfirmBatchRemoveCancel={handleMenuBatchRemoveCancel}
           isQueryShow={isQueryMenuShow}
