@@ -1,11 +1,13 @@
 import httpClient from '@/lib/http';
 import { StandardResponse } from '@/lib/http/types';
 import { EmailAndCodeRequest, OAuth2PasswordRequestForm, SendVerificationCodeRequest, UserCredential, UserInfo, UserRegisterRequest } from '@/types/auth';
+import { encryptPassword } from '@/utils/crypto-util';
 
-export function resetPassword(id: string, newPassword: string) {
+export function resetPassword(id: string,username: string, newPassword: string) {
   const data = {
     id: id,
-    new_password: newPassword,
+    username: username,
+    new_password: encryptPassword(username, newPassword),
   };
   return httpClient.post<void>(
     '/auth:resetPassword', data
@@ -19,9 +21,13 @@ export function fetchUserInfo() {
 }
 
 export function signInWithEmailAndPassword(req: OAuth2PasswordRequestForm) {
+  const encryptedReq = {
+    ...req,
+    password: encryptPassword(req.username, req.password)
+  };
   return httpClient.post<UserCredential>(
     '/auth:signInWithEmailAndPassword',
-    req,
+    encryptedReq,
     {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -47,9 +53,14 @@ export function sendVerificationCode(req: SendVerificationCodeRequest) {
 }
 
 export function register(req: UserRegisterRequest) {
+  const encryptedReq = {
+    ...req,
+    password: encryptPassword(req.email, req.password)
+  };
+
   return httpClient.post<StandardResponse>(
     '/auth:register',
-    req,
+    encryptedReq
   );
 }
 

@@ -225,7 +225,7 @@ const UserPage: React.FC = () => {
 
     setIsLoading(true);
     try {
-      await resetPassword(recordToReset.id, values.newPassword);
+      await resetPassword(recordToReset.id, recordToReset.username,  values.newPassword);
       message.success(`用户 ${recordToReset.nickname} 的密码已成功重置！`);
 
       handleCancel();

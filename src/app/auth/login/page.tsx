@@ -289,7 +289,7 @@ export default function LoginPage() {
                     loading={loading}
                     className="w-full h-12 rounded-lg bg-primary border-0 hover:opacity-80 transition-all duration-200"
                   >
-                    {loading ? '登录中...' : '登录1'}
+                    {loading ? '登录中...' : '登录'}
                   </Button>
                 </Form.Item>
               </Form>
