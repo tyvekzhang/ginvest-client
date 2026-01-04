@@ -3,17 +3,16 @@ import {PaginationRequest} from '.';
 
 export interface ListRankingMultipleFactorsRequest extends PaginationRequest {
     
-    id: string;
+    id?: string;
     
-    stock_code: string;
+    stock_code?: string;
     
-    stock_name: string;
+    stock_name?: string;
     
-    industry: string;
+    industry?: string;
     
-    query_period: number;
+    query_period?: number;
     
-    rank: number;
     
 }
 

@@ -13,11 +13,28 @@ import {
   ImportStocksResponse,
   ListStocksRequest,
   Stock,
+  StockAbstract,
   StockDetail,
   UpdateStockRequest,
 } from '@/types/stock';
 import { AxiosResponse } from 'axios';
 import useSWR from 'swr';
+
+export function useStockAbstract(stockCode: string, queryPeriod: number) {
+  const { data, error, isLoading, isValidating, mutate } = useSWR<StockAbstract>(
+    stockCode ? `/stocks:abstract?stock_code=${stockCode}&query_period=${queryPeriod}` : null,
+    fetcher,
+  )
+
+  return {
+    abstract: data,
+    isLoading,
+    isError: error,
+    isValidating,
+    mutate,
+  }
+}
+
 
 export function useStockCompany(stock_code: string) {
   const { data, error, isLoading, isValidating, mutate } = useSWR<Stock>(

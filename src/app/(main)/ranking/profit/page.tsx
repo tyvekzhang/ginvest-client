@@ -164,7 +164,7 @@ export default function RevenueRankingPage() {
           }
         >
           <Eye className="w-3.5 h-3.5" />
-          查看明细
+          详情
         </button>
       ),
     },
