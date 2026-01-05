@@ -17,6 +17,8 @@ import {
   ResponsiveContainer,
 } from "recharts"
 import { useStockAbstract } from "@/service/stock"
+import { Dividend, FinancialRisk, GrowthAbility, IndicatorAnnual, OperatingCapability, PerIndicator, Profitability, RevenueQuality } from "@/types/stock"
+import { ValueType, NameType } from 'recharts/types/component/DefaultTooltipContent'
 
 const { Title, Text } = Typography
 
@@ -49,13 +51,13 @@ const INDICATOR_CONFIGS: Record<string, IndicatorConfig> = {
     dualAxis: false,
     rightAxisLabel: "百分比(%)",
     fields: [
-      { key: "roe", label: "ROE", unit: "%", color: "#ef4444", strokeWidth: 3, chartType: "line", important: true },
-      { key: "gross_margin", label: "毛利率", unit: "%", color: "#3b82f6", strokeWidth: 2, chartType: "area", important: true },
-      { key: "net_profit_margin", label: "净利率", unit: "%", color: "#10b981", strokeWidth: 2, chartType: "area", important: true },
-      { key: "return_on_invested_capital", label: "ROIC", unit: "%", color: "#f59e0b", strokeWidth: 2, chartType: "line", strokeDasharray: "5 5" },
-      { key: "average_roa", label: "ROA", unit: "%", color: "#8b5cf6", strokeWidth: 2, chartType: "line", strokeDasharray: "3 3" },
-      { key: "operating_margin", label: "营业利润率", unit: "%", color: "#ec4899", strokeWidth: 2, chartType: "line" },
-      { key: "ebit_margin", label: "EBIT利润率", unit: "%", color: "#06b6d4", strokeWidth: 2, chartType: "line" },
+      { key: "roe", label: "ROE", unit: "%", color: "#3b82f6", strokeWidth: 3, chartType: "line", important: true },
+      { key: "gross_margin", label: "毛利率", unit: "%", color: "#10b981", strokeWidth: 2, chartType: "area", important: true },
+      { key: "net_profit_margin", label: "净利率", unit: "%", color: "#f59e0b", strokeWidth: 2, chartType: "area", important: true },
+      { key: "return_on_invested_capital", label: "ROIC", unit: "%", color: "#8b5cf6", strokeWidth: 2, chartType: "line", strokeDasharray: "5 5" },
+      { key: "average_roa", label: "ROA", unit: "%", color: "#ec4899", strokeWidth: 2, chartType: "line", strokeDasharray: "3 3" },
+      { key: "operating_margin", label: "营业利润率", unit: "%", color: "#06b6d4", strokeWidth: 2, chartType: "line" },
+      { key: "ebit_margin", label: "EBIT利润率", unit: "%", color: "#ef4444", strokeWidth: 2, chartType: "line" },
     ],
   },
   growth: {
@@ -65,11 +67,11 @@ const INDICATOR_CONFIGS: Record<string, IndicatorConfig> = {
     leftAxisLabel: "金额(亿元)",
     rightAxisLabel: "增长率(%)",
     fields: [
-      { key: "net_profit", label: "净利润", unit: "亿", color: "#10b981", strokeWidth: 2, chartType: "bar", yAxisId: "left", important: true },
-      { key: "revenue_growth", label: "营收增长率", unit: "%", color: "#3b82f6", strokeWidth: 3, chartType: "line", yAxisId: "right", important: true },
+      { key: "net_profit", label: "净利润", unit: "亿", color: "#3b82f6", strokeWidth: 2, chartType: "bar", yAxisId: "left", important: true },
+      { key: "revenue_growth", label: "营收增长率", unit: "%", color: "#10b981", strokeWidth: 3, chartType: "line", yAxisId: "right", important: true },
       { key: "profit_growth", label: "利润增长率", unit: "%", color: "#f59e0b", strokeWidth: 3, chartType: "line", yAxisId: "right", important: true },
-      { key: "total_operating_revenue", label: "营业总收入", unit: "亿", color: "#ec4899", strokeWidth: 2, chartType: "bar", yAxisId: "left", strokeDasharray: "5 5" },
-      { key: "net_profit_attributable_to_parent_company", label: "归母净利润", unit: "亿", color: "#8b5cf6", strokeWidth: 2, chartType: "bar", yAxisId: "left", strokeDasharray: "3 3" },
+      { key: "total_operating_revenue", label: "营业总收入", unit: "亿", color: "#8b5cf6", strokeWidth: 2, chartType: "bar", yAxisId: "left", strokeDasharray: "5 5" },
+      { key: "net_profit_attributable_to_parent_company", label: "归母净利润", unit: "亿", color: "#ec4899", strokeWidth: 2, chartType: "bar", yAxisId: "left", strokeDasharray: "3 3" },
     ],
   },
   risk: {
@@ -79,12 +81,12 @@ const INDICATOR_CONFIGS: Record<string, IndicatorConfig> = {
     leftAxisLabel: "比率",
     rightAxisLabel: "百分比(%)",
     fields: [
-      { key: "debt_ratio", label: "资产负债率", unit: "%", color: "#ef4444", strokeWidth: 3, chartType: "area", yAxisId: "right", important: true },
+      { key: "debt_ratio", label: "资产负债率", unit: "%", color: "#3b82f6", strokeWidth: 3, chartType: "area", yAxisId: "right", important: true },
       { key: "current_ratio", label: "流动比率", unit: "", color: "#10b981", strokeWidth: 3, chartType: "bar", yAxisId: "left", important: true },
-      { key: "quick_ratio", label: "速动比率", unit: "", color: "#06b6d4", strokeWidth: 2, chartType: "bar", yAxisId: "left", important: true },
-      { key: "cash_ratio", label: "现金比率", unit: "", color: "#f59e0b", strokeWidth: 2, chartType: "line", yAxisId: "left", strokeDasharray: "5 5" },
+      { key: "quick_ratio", label: "速动比率", unit: "", color: "#f59e0b", strokeWidth: 2, chartType: "bar", yAxisId: "left", important: true },
+      { key: "cash_ratio", label: "现金比率", unit: "", color: "#8b5cf6", strokeWidth: 2, chartType: "line", yAxisId: "left", strokeDasharray: "5 5" },
       { key: "equity_multiplier", label: "权益乘数", unit: "", color: "#ec4899", strokeWidth: 2, chartType: "line", yAxisId: "left", strokeDasharray: "3 3" },
-      { key: "equity_ratio", label: "产权比率", unit: "%", color: "#8b5cf6", strokeWidth: 2, chartType: "line", yAxisId: "right" },
+      { key: "equity_ratio", label: "产权比率", unit: "%", color: "#06b6d4", strokeWidth: 2, chartType: "line", yAxisId: "right" },
     ],
   },
   operating: {
@@ -94,12 +96,12 @@ const INDICATOR_CONFIGS: Record<string, IndicatorConfig> = {
     leftAxisLabel: "周转天数(天)",
     rightAxisLabel: "周转率(次)",
     fields: [
-      { key: "total_asset_turnover", label: "总资产周转率", unit: "次", color: "#06b6d4", strokeWidth: 3, chartType: "line", yAxisId: "right", important: true },
-      { key: "inventory_turnover_days", label: "存货周转天数", unit: "天", color: "#fbbf24", strokeWidth: 2, chartType: "bar", yAxisId: "left", important: true },
-      { key: "accounts_receivable_turnover_days", label: "应收周转天数", unit: "天", color: "#f472b6", strokeWidth: 2, chartType: "bar", yAxisId: "left", important: true },
-      { key: "current_asset_turnover", label: "流动资产周转率", unit: "次", color: "#10b981", strokeWidth: 2, chartType: "line", yAxisId: "right", strokeDasharray: "5 5" },
-      { key: "inventory_turnover", label: "存货周转率", unit: "次", color: "#8b5cf6", strokeWidth: 2, chartType: "line", yAxisId: "right" },
-      { key: "accounts_receivable_turnover", label: "应收账款周转率", unit: "次", color: "#ef4444", strokeWidth: 2, chartType: "line", yAxisId: "right", strokeDasharray: "3 3" },
+      { key: "total_asset_turnover", label: "总资产周转率", unit: "次", color: "#3b82f6", strokeWidth: 3, chartType: "line", yAxisId: "right", important: true },
+      { key: "inventory_turnover_days", label: "存货周转天数", unit: "天", color: "#10b981", strokeWidth: 2, chartType: "bar", yAxisId: "left", important: true },
+      { key: "accounts_receivable_turnover_days", label: "应收周转天数", unit: "天", color: "#f59e0b", strokeWidth: 2, chartType: "bar", yAxisId: "left", important: true },
+      { key: "current_asset_turnover", label: "流动资产周转率", unit: "次", color: "#8b5cf6", strokeWidth: 2, chartType: "line", yAxisId: "right", strokeDasharray: "5 5" },
+      { key: "inventory_turnover", label: "存货周转率", unit: "次", color: "#ec4899", strokeWidth: 2, chartType: "line", yAxisId: "right" },
+      { key: "accounts_receivable_turnover", label: "应收账款周转率", unit: "次", color: "#06b6d4", strokeWidth: 2, chartType: "line", yAxisId: "right", strokeDasharray: "3 3" },
     ],
   },
   cash: {
@@ -109,11 +111,11 @@ const INDICATOR_CONFIGS: Record<string, IndicatorConfig> = {
     leftAxisLabel: "比率",
     rightAxisLabel: "百分比(%)",
     fields: [
-      { key: "cashflow_ratio", label: "净现比", unit: "", color: "#059669", strokeWidth: 3, chartType: "bar", yAxisId: "left", important: true },
-      { key: "operating_cash_to_sales", label: "销售回款率", unit: "", color: "#f472b6", strokeWidth: 2, chartType: "line", yAxisId: "left", important: true },
-      { key: "operating_cash_to_total_revenue", label: "经营现金流/营收", unit: "", color: "#8b5cf6", strokeWidth: 2, chartType: "line", yAxisId: "left", important: true, strokeDasharray: "5 5" },
-      { key: "cost_expense_ratio", label: "成本费用率", unit: "%", color: "#f59e0b", strokeWidth: 2, chartType: "area", yAxisId: "right", strokeDasharray: "3 3" },
-      { key: "period_expense_ratio", label: "期间费用率", unit: "%", color: "#06b6d4", strokeWidth: 2, chartType: "area", yAxisId: "right" },
+      { key: "cashflow_ratio", label: "净现比", unit: "", color: "#3b82f6", strokeWidth: 3, chartType: "bar", yAxisId: "left", important: true },
+      { key: "operating_cash_to_sales", label: "销售回款率", unit: "", color: "#10b981", strokeWidth: 2, chartType: "line", yAxisId: "left", important: true },
+      { key: "operating_cash_to_total_revenue", label: "经营现金流/营收", unit: "", color: "#f59e0b", strokeWidth: 2, chartType: "line", yAxisId: "left", important: true },
+      { key: "cost_expense_ratio", label: "成本费用率", unit: "%", color: "#8b5cf6", strokeWidth: 2, chartType: "area", yAxisId: "right", strokeDasharray: "5 5" },
+      { key: "period_expense_ratio", label: "期间费用率", unit: "%", color: "#ec4899", strokeWidth: 2, chartType: "area", yAxisId: "right" },
     ],
   },
   valuation: {
@@ -125,9 +127,9 @@ const INDICATOR_CONFIGS: Record<string, IndicatorConfig> = {
     fields: [
       { key: "pe_ratio", label: "PE市盈率", unit: "倍", color: "#3b82f6", strokeWidth: 3, chartType: "line", yAxisId: "right", important: true },
       { key: "pb_ratio", label: "PB市净率", unit: "倍", color: "#10b981", strokeWidth: 3, chartType: "line", yAxisId: "right", important: true },
-      { key: "close_price", label: "收盘价", unit: "元", color: "#ef4444", strokeWidth: 2, chartType: "area", yAxisId: "left", important: true },
-      { key: "total_market_cap", label: "总市值", unit: "亿", color: "#f59e0b", strokeWidth: 2, chartType: "bar", yAxisId: "left", strokeDasharray: "5 5" },
-      { key: "net_asset", label: "净资产", unit: "亿", color: "#8b5cf6", strokeWidth: 2, chartType: "bar", yAxisId: "left", strokeDasharray: "3 3" },
+      { key: "close_price", label: "收盘价", unit: "元", color: "#f59e0b", strokeWidth: 2, chartType: "area", yAxisId: "left", important: true },
+      { key: "total_market_cap", label: "总市值", unit: "亿", color: "#8b5cf6", strokeWidth: 2, chartType: "bar", yAxisId: "left", strokeDasharray: "5 5" },
+      { key: "net_asset", label: "净资产", unit: "亿", color: "#ec4899", strokeWidth: 2, chartType: "bar", yAxisId: "left", strokeDasharray: "3 3" },
     ],
   },
   perIndicator: {
@@ -137,13 +139,13 @@ const INDICATOR_CONFIGS: Record<string, IndicatorConfig> = {
     leftAxisLabel: "金额(元)",
     rightAxisLabel: "金额(元)",
     fields: [
-      { key: "basic_earnings_per_share", label: "基本每股收益", unit: "元", color: "#ef4444", strokeWidth: 3, chartType: "line", yAxisId: "left", important: true },
-      { key: "book_value_latest_shares", label: "每股净资产", unit: "元", color: "#3b82f6", strokeWidth: 3, chartType: "bar", yAxisId: "left", important: true },
-      { key: "operating_cash_flow_per_share", label: "每股经营现金流", unit: "元", color: "#10b981", strokeWidth: 2, chartType: "line", yAxisId: "left", important: true },
-      { key: "diluted_earnings_per_share", label: "稀释每股收益", unit: "元", color: "#f59e0b", strokeWidth: 2, chartType: "line", yAxisId: "left", strokeDasharray: "5 5" },
-      { key: "undistributed_profit_per_share", label: "每股未分配利润", unit: "元", color: "#8b5cf6", strokeWidth: 2, chartType: "bar", yAxisId: "left" },
-      { key: "capital_reserve_per_share", label: "每股资本公积", unit: "元", color: "#ec4899", strokeWidth: 2, chartType: "line", yAxisId: "left", strokeDasharray: "3 3" },
-      { key: "retained_earnings_per_share", label: "每股留存收益", unit: "元", color: "#06b6d4", strokeWidth: 2, chartType: "bar", yAxisId: "left" },
+      { key: "basic_earnings_per_share", label: "基本每股收益", unit: "元", color: "#3b82f6", strokeWidth: 3, chartType: "line", yAxisId: "left", important: true },
+      { key: "book_value_latest_shares", label: "每股净资产", unit: "元", color: "#10b981", strokeWidth: 3, chartType: "bar", yAxisId: "left", important: true },
+      { key: "operating_cash_flow_per_share", label: "每股经营现金流", unit: "元", color: "#f59e0b", strokeWidth: 2, chartType: "line", yAxisId: "left", important: true },
+      { key: "diluted_earnings_per_share", label: "稀释每股收益", unit: "元", color: "#8b5cf6", strokeWidth: 2, chartType: "line", yAxisId: "left", strokeDasharray: "5 5" },
+      { key: "undistributed_profit_per_share", label: "每股未分配利润", unit: "元", color: "#ec4899", strokeWidth: 2, chartType: "bar", yAxisId: "left" },
+      { key: "capital_reserve_per_share", label: "每股资本公积", unit: "元", color: "#06b6d4", strokeWidth: 2, chartType: "line", yAxisId: "left", strokeDasharray: "3 3" },
+      { key: "retained_earnings_per_share", label: "每股留存收益", unit: "元", color: "#ef4444", strokeWidth: 2, chartType: "bar", yAxisId: "left" },
     ],
   },
   dividend: {
@@ -154,8 +156,8 @@ const INDICATOR_CONFIGS: Record<string, IndicatorConfig> = {
     rightAxisLabel: "比率(%)",
     useQuarterlyData: true,
     fields: [
-      { key: "dividend_income", label: "每股分红", unit: "元", color: "#10b981", strokeWidth: 3, chartType: "bar", yAxisId: "left", important: true },
-      { key: "dividend_rate", label: "股息率", unit: "%", color: "#3b82f6", strokeWidth: 3, chartType: "line", yAxisId: "right", important: true },
+      { key: "dividend_income", label: "每股分红", unit: "元", color: "#3b82f6", strokeWidth: 3, chartType: "bar", yAxisId: "left", important: true },
+      { key: "dividend_rate", label: "股息率", unit: "%", color: "#10b981", strokeWidth: 3, chartType: "line", yAxisId: "right", important: true },
       { key: "payout_rate", label: "分红率", unit: "%", color: "#f59e0b", strokeWidth: 2, chartType: "line", yAxisId: "right", important: true },
     ],
   },
@@ -187,7 +189,7 @@ const getDefaultVisibleFields = (): Record<string, string[]> => {
     const importantFields = config.fields
       .filter((f) => f.important)
       .map((f) => f.key)
-    
+
     if (importantFields.length >= 3) {
       // 如果 important 字段够3个，取前3个
       initial[configKey] = importantFields.slice(0, 3)
@@ -248,7 +250,7 @@ export default function StockDetail() {
 
     const yearDataMap: Record<number, any> = {}
 
-    const processArray = (dataArray: any[]) => {
+    const processArray = (dataArray: Dividend[] | IndicatorAnnual[] | Profitability[] | GrowthAbility[] | RevenueQuality[] | FinancialRisk[] | OperatingCapability[] | PerIndicator[]) => {
       if (!dataArray || !Array.isArray(dataArray)) return
 
       const yearGroups: Record<number, any[]> = {}
@@ -359,15 +361,13 @@ export default function StockDetail() {
     }))
   }
 
-  const SectionHeader = ({ title, icon: Icon, configKey }: { title: string; icon: any; configKey: string }) => {
+  const SectionHeader = ({ title, configKey }: { title: string; icon: any; configKey: string }) => {
     const config = INDICATOR_CONFIGS[configKey]
     return (
+
       <div className="mb-6 p-4 bg-gradient-to-r from-slate-50 to-white rounded-lg border border-slate-100">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-50 rounded-lg">
-              <Icon size={22} className="text-blue-600" />
-            </div>
             <div>
               <Title level={4} className="!mb-0">
                 {title}
@@ -385,7 +385,7 @@ export default function StockDetail() {
             value={visibleFields[configKey]}
             onChange={(values) => handleFieldChange(configKey, values)}
             options={getFieldOptions(config)}
-            style={{ minWidth: 320, maxWidth: 550 }}
+            style={{ minWidth: 480, maxWidth: 720 }}
             maxTagCount={3}
             maxTagPlaceholder={(omittedValues) => `+${omittedValues.length}项`}
             allowClear
@@ -422,6 +422,7 @@ export default function StockDetail() {
 
     return (
       <div className="h-[400px] p-4 bg-gradient-to-br from-white to-slate-50 rounded-xl border border-slate-200 shadow-inner">
+
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={chartDataToUse} margin={{ top: 20, right: hasRightAxis ? 60 : 20, left: 20, bottom: 20 }}>
             <defs>
@@ -491,12 +492,12 @@ export default function StockDetail() {
                 backgroundColor: "rgba(255, 255, 255, 0.95)",
                 backdropFilter: "blur(8px)",
               }}
-              formatter={(value: number, name: string) => {
+              formatter={(value: ValueType, name: NameType) => {
                 const field = config.fields.find((f) => f.label === name)
                 const formattedValue = typeof value === "number" ? value.toFixed(2) : value
                 return [`${formattedValue} ${field?.unit || ""}`, name]
               }}
-              labelFormatter={(label) => config.useQuarterlyData ? label : `${label}年`}
+              labelFormatter={(label: string) => config.useQuarterlyData ? label : `${label}年`}
               labelStyle={{ fontWeight: 600, marginBottom: 8 }}
             />
             <Legend
@@ -566,29 +567,26 @@ export default function StockDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-slate-50 to-white pb-20">
+    <div className="min-h-screen px-5 bg-white">
+      <div className="mt-4 mb-2">
+        <Button
+          icon={<ArrowLeft size={16} />}
+          onClick={() => router.back()}
+          className="flex items-center gap-2"
+        >
+          返回
+        </Button>
+      </div>
       {/* 顶部标题栏 */}
-      <div className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-20 px-6 py-4 shadow-sm">
-        <div className="max-w-[1400px] mx-auto flex justify-between items-center flex-wrap gap-4">
-          <Space size="large">
-            <Button
-              icon={<ArrowLeft size={16} />}
-              onClick={() => router.back()}
-              type="text"
-              className="hover:bg-slate-100"
-            />
-            <div>
-              <Title level={3} className="!mb-0">
-                {stockName || "加载中..."}{" "}
-                <Text type="secondary" className="font-normal">
-                  ({stock_code})
-                </Text>
-              </Title>
-              <Text type="secondary">深度财务指标透视看板 · 多维度分析</Text>
-            </div>
-          </Space>
-          <div className="flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-lg border border-slate-200">
-            <span className="text-slate-500 text-sm font-medium">查询周期</span>
+      <div className="bg-white top-0 z-20">
+        <div className="max-w-[1400px] p-6 mx-auto flex justify-between items-center flex-wrap gap-4 bg-white border border-gray-200">
+          <div >
+            <h1 className="text-xl md:text-2xl font-bold mb-2">{stockName}</h1>
+            <p className="text-gray-600 text-base">
+              股票代码: {stock_code} | 行业: {abstract?.profitability[0]?.industry}
+            </p>
+          </div>
+          <div className="flex items-center gap-3 px-4 py-2 rounded-lg borde">
             <Select
               value={timePeriod}
               onChange={setTimePeriod}
@@ -601,34 +599,15 @@ export default function StockDetail() {
                 { label: "近十五年", value: 15 },
               ]}
               style={{ width: 120 }}
-              className="!border-0"
             />
           </div>
         </div>
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-6 mt-8">
+      <div className="max-w-[1400px] mx-auto -mt-0.5">
         <Spin spinning={isLoading} tip="正在装载财务数据...">
           {abstract && chartData.length > 0 && (
             <Row gutter={[0, 24]}>
-              {/* 图表说明 */}
-              <Col span={24}>
-                <div className="flex items-center gap-6 text-sm text-slate-500 bg-white/50 p-3 rounded-lg border border-slate-100">
-                  <span className="flex items-center gap-1">
-                    <span className="text-xs">[柱]</span> 柱状图
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <span className="text-xs">[线]</span> 折线图
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <span className="text-xs">[面]</span> 面积图
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <span className="text-orange-500">★</span> 核心指标
-                  </span>
-                </div>
-              </Col>
-
               {/* 1. 盈利能力 */}
               <Col span={24}>
                 <Card className="!rounded-2xl shadow-lg border border-slate-200 overflow-hidden">

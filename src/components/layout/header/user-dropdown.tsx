@@ -44,14 +44,14 @@ export function UserDropdown() {
   );
 
   const items: MenuProps['items'] = [
-    {
-      key: 'profile',
-      label: 'Profile',
-      icon: <User className={iconClass} />,
-    },
+    // {
+    //   key: 'profile',
+    //   label: 'Profile',
+    //   icon: <User className={iconClass} />,
+    // },
     {
       key: 'logout',
-      label: 'Logout',
+      label: '退出登录',
       icon: <LogOut className={iconClass} />,
     },
   ];

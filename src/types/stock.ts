@@ -5,14 +5,14 @@ export type TimePeriod = 1 | 3 | 5 | 10 | 15 | 20
 
 // Stock types based on API response structure
 export interface StockAbstract {
-    dividend: Dividend
-    indicator_annual: IndicatorAnnual
-    profitability: Profitability
-    growth_ability: GrowthAbility
-    revenue_quality: RevenueQuality
-    financial_risk: FinancialRisk
-    operating_capability: OperatingCapability
-    per_indicator: PerIndicator
+    dividend: Dividend[]
+    indicator_annual: IndicatorAnnual[]
+    profitability: Profitability[]
+    growth_ability: GrowthAbility[]
+    revenue_quality: RevenueQuality[]
+    financial_risk: FinancialRisk[]
+    operating_capability: OperatingCapability[]
+    per_indicator: PerIndicator[]
 }
 
 export interface Dividend {
@@ -52,6 +52,7 @@ export interface IndicatorAnnual {
 
 export interface Profitability {
     diluted_roe: string
+    industry: string
     ebit_after_tax_roa_avg: string
     updated_at: string
     average_roe: string

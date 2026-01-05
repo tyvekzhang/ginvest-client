@@ -120,7 +120,7 @@ export default function LoginPage() {
       });
     }, 1000);
   };
-  
+
 
   const handleThirdPartyLogin = (provider: string) => {
     message.info(`${provider}登录功能马上就来...`);
@@ -149,6 +149,9 @@ export default function LoginPage() {
                 autoComplete="off"
                 size="large"
                 className="space-y-6"
+                initialValues={{
+                  remember: true,
+                }}
               >
                 <Form.Item
                   name="username"
@@ -224,6 +227,9 @@ export default function LoginPage() {
                 autoComplete="off"
                 size="large"
                 className="space-y-6"
+                initialValues={{
+                  remember: true,
+                }}
               >
                 {/* 邮箱 */}
                 <Form.Item

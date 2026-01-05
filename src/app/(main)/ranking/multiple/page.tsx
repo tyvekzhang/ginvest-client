@@ -7,7 +7,7 @@ import TransitionWrapper from '@/components/base/transition-wrapper';
 import {
   useRankingMultipleFactors,
 } from '@/service/ranking-multiple-factor';
-import { createPaginationRequest } from '@/types';
+import { createPaginationRequest, SortItem } from '@/types';
 import {
   ListRankingMultipleFactorsRequest,
   RankingMultipleFactor,
@@ -38,6 +38,12 @@ const RankingMultipleFactorPage: React.FC = () => {
   const [rankingMultipleFactorQueryParams, setRankingMultipleFactorQueryParams] = useState<ListRankingMultipleFactorsRequest>();
 
   // 用 useRankingMultipleFactors 获取菜单列表数据
+  const sortList: SortItem[] = [
+    {
+      field: 'rank',
+      order: 'asc'
+    }
+  ]
   const {
     rankingMultipleFactors: rankingMultipleFactorListDataSource,
     total,
@@ -45,7 +51,7 @@ const RankingMultipleFactorPage: React.FC = () => {
     mutateRankingMultipleFactors,
   } = useRankingMultipleFactors({
     ...rankingMultipleFactorQueryParams,
-    ...createPaginationRequest(current, pageSize),
+    ...createPaginationRequest(current, pageSize,  JSON.stringify(sortList)),
   });
 
   const onQueryRankingMultipleFactorShow = () => {
@@ -173,23 +179,7 @@ const RankingMultipleFactorPage: React.FC = () => {
       width: 120,
     },
     {
-      title: "营收增长率cagr",
-      dataIndex: "revenue_growth_cagr",
-      key: "revenue_growth_cagr",
-      align: 'right',
-      render: (text) => (text ? `${text}` : "-"),
-      width: 140,
-    },
-    {
-      title: "净利润增长率cagr",
-      dataIndex: "profit_growth_cagr",
-      key: "profit_growth_cagr",
-      align: 'right',
-      render: (text) => (text ? `${text}` : "-"),
-      width: 150,
-    },
-    {
-      title: "现金净利比加权平均",
+      title: "经净比加权平均",
       dataIndex: "cashflow_ratio_weighted_avg",
       key: "cashflow_ratio_weighted_avg",
       align: 'right',
@@ -220,6 +210,23 @@ const RankingMultipleFactorPage: React.FC = () => {
       render: (text) => (text ? `${text}` : "-"),
       width: 160,
     },
+    {
+      title: "营收增长率cagr",
+      dataIndex: "revenue_growth_cagr",
+      key: "revenue_growth_cagr",
+      align: 'right',
+      render: (text) => (text ? `${text}` : "-"),
+      width: 140,
+    },
+    {
+      title: "净利润增长率cagr",
+      dataIndex: "profit_growth_cagr",
+      key: "profit_growth_cagr",
+      align: 'right',
+      render: (text) => (text ? `${text}` : "-"),
+      width: 150,
+    },
+
     {
       title: "市盈率中位数",
       dataIndex: "pe_ratio_median",
@@ -340,7 +347,7 @@ const RankingMultipleFactorPage: React.FC = () => {
           onPaginationChange={handlePaginationChange}
           onSelectionChange={handleSelectionChange}
           selectedRowKeys={selectedRowKeys}
-          rowKey="stock_code"
+          rowKey="id"
           loading={isRankingMultipleFactorListLoading}
           scroll={{ x: 1500 }}
         />
