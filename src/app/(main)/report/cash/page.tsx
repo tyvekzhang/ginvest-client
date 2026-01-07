@@ -99,6 +99,10 @@ const ReportCashFlowPage: React.FC = () => {
         endDate.format('YYYY-MM-DD'),
       ];
     }
+    const { year } = values
+    if (year) {
+      values.year = year.year()
+    }
     const queryReportCashFlow = values as ListReportCashFlowsRequest;
     const filteredQueryReportCashFlow = Object.fromEntries(
       Object.entries(queryReportCashFlow).filter(

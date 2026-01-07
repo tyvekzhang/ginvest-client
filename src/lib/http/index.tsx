@@ -161,13 +161,13 @@ class HttpClient {
 
   private handleUnauthorized() {
     // Clear authentication information
-    // localStorage.removeItem(APP_CONFIG.STORAGE_KEYS.AUTH);
+    localStorage.removeItem(APP_CONFIG.STORAGE_KEYS.AUTH);
 
     // Redirect to login page
     if (typeof window !== 'undefined') {
       const currentPath = window.location.pathname;
       if (currentPath !== '/auth/login' && currentPath !== '/auth/register') {
-        // window.location.href = '/auth/login';
+        window.location.href = '/auth/login';
       }
     }
   }

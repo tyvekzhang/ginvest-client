@@ -98,6 +98,10 @@ const ReportBalanceSheetPage: React.FC = () => {
         endDate.format('YYYY-MM-DD'),
       ];
     }
+    const { year } = values
+    if (year) {
+      values.year = year.year()
+    }
     const queryReportBalanceSheet = values as ListReportBalanceSheetsRequest;
     const filteredQueryReportBalanceSheet = Object.fromEntries(
       Object.entries(queryReportBalanceSheet).filter(

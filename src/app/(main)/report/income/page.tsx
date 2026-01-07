@@ -98,6 +98,10 @@ const ReportIncomeStatementPage: React.FC = () => {
         endDate.format('YYYY-MM-DD'),
       ];
     }
+    const { year } = values
+    if (year) {
+      values.year = year.year()
+    }
     const queryReportIncomeStatement = values as ListReportIncomeStatementsRequest;
     const filteredQueryReportIncomeStatement = Object.fromEntries(
       Object.entries(queryReportIncomeStatement).filter(

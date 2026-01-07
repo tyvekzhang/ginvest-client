@@ -14,6 +14,7 @@ interface QueryStockProps {
   onQueryStockFinish: (values: any) => void;
   onQueryStockReset: () => void;
   onQueryStockForm: FormInstance;
+  industryList: string[]
 }
 
 const queryStockFormItemLayout = {
@@ -25,6 +26,7 @@ const QueryStockComponent: React.FC<QueryStockProps> = ({
   onQueryStockFinish,
   onQueryStockReset,
   onQueryStockForm,
+  industryList,
 }) => {
   const handleQueryStockReset = () => {
     onQueryStockReset();
@@ -34,21 +36,34 @@ const QueryStockComponent: React.FC<QueryStockProps> = ({
     const values = await onQueryStockForm.validateFields();
     onQueryStockFinish(values);
   };
-
+  const industryOptions = industryList?.map(value => ({
+    value,
+    label: value,
+  })) || [];
 
   return (
     <Form
       {...queryStockFormItemLayout}
-      form={ onQueryStockForm}
+      form={onQueryStockForm}
       name="queryStock"
       onFinish={onQueryStockFinish}
     >
       <div className='flex flex-wrap items-center gap-x-2 pt-4 justify-between'>
-        <Form.Item name="stock_code" label="股票编号" >
-          <Input placeholder="请输入股票编号" allowClear />
+        <Form.Item name="stock_code" label="股票信息" >
+          <Input placeholder="请输入股票代码或名称" allowClear />
         </Form.Item>
-        <Form.Item name="stock_name" label="股票名称" >
-          <Input placeholder="请输入股票名称" allowClear />
+
+        <Form.Item name="industry" label="所属行业" >
+          <Select
+            allowClear
+            showSearch
+            placeholder="请选择行业"
+            options={industryOptions}
+            filterOption={(input, option) =>
+              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+            }
+            style={{ width: 200 }}
+          />
         </Form.Item>
         <Form.Item name="listing_date" label="上市日期" >
           <DatePicker.RangePicker
@@ -56,15 +71,12 @@ const QueryStockComponent: React.FC<QueryStockProps> = ({
             format="YYYY-MM-DD"
             placeholder={["请选择开始时间", "请选择结束时间"]}
             presets={[
-                { label: '最近7天', value: [dayjs().add(-7, 'd'), dayjs()] },
-                { label: '最近14天', value: [dayjs().add(-14, 'd'), dayjs()] },
-                { label: '最近30天', value: [dayjs().add(-30, 'd'), dayjs()] },
-                { label: '最近90天', value: [dayjs().add(-90, 'd'), dayjs()] },
+              { label: '最近7天', value: [dayjs().add(-7, 'd'), dayjs()] },
+              { label: '最近14天', value: [dayjs().add(-14, 'd'), dayjs()] },
+              { label: '最近30天', value: [dayjs().add(-30, 'd'), dayjs()] },
+              { label: '最近90天', value: [dayjs().add(-90, 'd'), dayjs()] },
             ]}
           />
-        </Form.Item>
-        <Form.Item name="industry" label="行业" >
-          <Input placeholder="请输入行业" allowClear />
         </Form.Item>
         <Form.Item>
           <div className='flex items-center gap-2 justify-start pr-4'>

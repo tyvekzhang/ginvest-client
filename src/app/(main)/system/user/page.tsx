@@ -240,7 +240,7 @@ const UserPage: React.FC = () => {
   const colorMap: Record<string, string> = {
     '0': 'red',
     '1': 'green',
-    '2': 'blue'
+    '2': 'orange'
   };
 
   // 表格列信息
@@ -314,7 +314,7 @@ const UserPage: React.FC = () => {
       dataIndex: 'remark',
       key: 'remark',
       render: (text) => (text ? text : '--'),
-      width: '12%',
+      width: '14%',
       ellipsis: true,
     },
     {
@@ -380,6 +380,7 @@ const UserPage: React.FC = () => {
               onConfirm={() => handleDeleteUser(record)}
               okText="确认"
               cancelText="取消"
+              icon={<Trash2 className="w-4 h-4 text-red-500 pt-1" />}
             >
               <button
                 type="button"

@@ -36,6 +36,7 @@ import ImportStockComponent from './components/import-stock';
 import StockDetailComponent from './components/stock-detail';
 import QueryStockComponent from './components/query-stock';
 import UpdateStockComponent from './components/update-stock';
+import { useIndustry } from '@/service/stock';
 
 const StockPage: React.FC = () => {
   // 配置模块
@@ -447,6 +448,7 @@ const StockPage: React.FC = () => {
       setIsExportLoading(false);
     }
   };
+  const { industryList } = useIndustry();
 
   return (
     <div className="w-full mx-auto px-4 bg-white">
@@ -455,6 +457,7 @@ const StockPage: React.FC = () => {
           onQueryStockFinish={onQueryStockFinish}
           onQueryStockReset={handleQueryStockReset}
           onQueryStockForm={queryStockForm}
+          industryList={industryList}
         />
       </TransitionWrapper>
       <div>

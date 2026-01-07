@@ -262,7 +262,6 @@ export default function CashRankingPage() {
                 { label: "近五年", value: 5 },
                 { label: "近十年", value: 10 },
                 { label: "近十五年", value: 15 },
-                { label: "近二十年", value: 20 },
               ]}
               style={{ width: 120 }}
             />
