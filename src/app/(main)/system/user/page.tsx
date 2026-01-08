@@ -48,7 +48,7 @@ import { ColumnsType } from 'antd/lib/table';
 import { format } from 'date-fns';
 import { CheckCircle2, MoreHorizontal, PenLine, RotateCcw, Trash2 } from 'lucide-react';
 import type { RcFile } from 'rc-upload/lib/interface';
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import CreateUserComponent from './components/create-user';
 import ImportUserComponent from './components/import-user';
 import QueryUserComponent from './components/query-user';
@@ -92,6 +92,18 @@ const UserPage: React.FC = () => {
     ...userQueryParams,
     ...createPaginationRequest(current, pageSize),
   });
+
+  // 对用户列表进行排序，将 id 为 9 的用户排在第一位
+  const sortedUserListDataSource = useMemo(() => {
+    if (!userListDataSource) return [];
+    
+    return [...userListDataSource].sort((a, b) => {
+      // id 为 9 的用户排在最前面
+      if (a.id.toString() === '9') return -1;
+      if (b.id.toString() === '9') return 1;
+      return 0; // 其他用户保持原有顺序
+    });
+  }, [userListDataSource]);
 
   const onQueryUserShow = () => {
     setIsQueryUserShow((prevState) => !prevState);
@@ -625,7 +637,7 @@ const UserPage: React.FC = () => {
       <div>
         <PaginatedTable<User>
           columns={filteredUserColumns}
-          dataSource={userListDataSource || []}
+          dataSource={sortedUserListDataSource}
           total={total || 0}
           current={current}
           page_size={pageSize}
@@ -751,5 +763,3 @@ const UserPage: React.FC = () => {
 };
 
 export default UserPage;
-
-
