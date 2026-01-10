@@ -118,7 +118,7 @@ export default function RevenueRankingPage() {
       ellipsis: true,
     },
     {
-      title: "行业",
+      title: "所属行业",
       dataIndex: "industry",
       width: '14%',
       ellipsis: true,
@@ -137,7 +137,7 @@ export default function RevenueRankingPage() {
       render: (v: number) => v.toLocaleString(),
     },
     {
-      title: "复合年增长率",
+      title: "复合增长率(%)",
       dataIndex: "cagr",
       key: "cagr",
       align: "right",
@@ -145,9 +145,9 @@ export default function RevenueRankingPage() {
       render: (text) => (text ? `${text}` : "-"),
     },
     {
-      title: "现金流量比率",
+      title: "经营净利比(%)",
       dataIndex: "cash_flow_ratio",
-      key: "cagr",
+      key: "cash_flow_ratio",
       align: "right",
       width: "12%",
       render: (text) => (text ? `${text}` : "-"),
@@ -178,7 +178,7 @@ export default function RevenueRankingPage() {
           item.stock_name.length > 6
             ? item.stock_name.slice(0, 6) + "..."
             : item.stock_name,
-        净利润: Math.round(item.total_profit / 1e8),
+        净利润: Math.round(item.avg_profit / 1e8),
       })),
     [rankingProfits],
   );
@@ -224,10 +224,10 @@ export default function RevenueRankingPage() {
             <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} tick={{ fontSize: 12 }} />
-              <YAxis stroke="#3b82f6" label={{ value: "净利润 (亿)", angle: -90, position: "insideLeft" }} />
-              <Tooltip formatter={(value: number) => [`${value}亿`, "净利润"]} />
+              <YAxis stroke="#3b82f6" label={{ value: "平均净利润 (亿)", angle: -90, position: "insideLeft" }} />
+              <Tooltip formatter={(value: number) => [`${value}亿`, "平均净利润"]} />
               <Legend wrapperStyle={{ paddingTop: 20 }} />
-              <Bar dataKey="净利润" fill="#3b82f6" name="净利润" />
+              <Bar dataKey="净利润" fill="#3b82f6" name="平均净利润" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -247,7 +247,7 @@ export default function RevenueRankingPage() {
               value={industry}
               allowClear
               showSearch
-              placeholder="请选择行业"
+              placeholder="请选择所属行业"
               onChange={(v) => {
                 setIndustry(v);
                 setCurrent(1);

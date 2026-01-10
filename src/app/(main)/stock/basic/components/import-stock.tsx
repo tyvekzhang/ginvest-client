@@ -88,7 +88,7 @@ const ImportStockComponent: React.FC<ImportStockProps> = ({
       render: (text) => (text ? text : "-"),
     },
     {
-      title: "行业",
+      title: "所属行业",
       dataIndex: "industry",
       key: "industry",
       render: (text) => (text ? text : "-"),

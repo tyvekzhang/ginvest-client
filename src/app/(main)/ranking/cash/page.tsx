@@ -118,7 +118,7 @@ export default function CashRankingPage() {
       ellipsis: true,
     },
     {
-      title: "行业",
+      title: "所属行业",
       dataIndex: "industry",
       width: '16%',
       ellipsis: true,
@@ -137,7 +137,7 @@ export default function CashRankingPage() {
       render: (v: number) => v.toLocaleString(),
     },
     {
-      title: "复合年增长率",
+      title: "复合增长率(%)",
       dataIndex: "cagr",
       key: "cagr",
       align: "right",
@@ -170,7 +170,7 @@ export default function CashRankingPage() {
           item.stock_name.length > 6
             ? item.stock_name.slice(0, 6) + "..."
             : item.stock_name,
-        经营现金: Math.round(item.total_cash / 1e8),
+        经营现金: Math.round(item.avg_cash / 1e8),
       })),
     [rankingCashList],
   );
@@ -216,10 +216,10 @@ export default function CashRankingPage() {
             <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} tick={{ fontSize: 12 }} />
-              <YAxis stroke="#3b82f6" label={{ value: "经营现金 (亿)", angle: -90, position: "insideLeft" }} />
-              <Tooltip formatter={(value: number) => [`${value}亿`, "经营现金"]} />
+              <YAxis stroke="#3b82f6" label={{ value: "平均经营现金 (亿)", angle: -90, position: "insideLeft" }} />
+              <Tooltip formatter={(value: number) => [`${value}亿`, "平均经营现金"]} />
               <Legend wrapperStyle={{ paddingTop: 20 }} />
-              <Bar dataKey="经营现金" fill="#3b82f6" name="经营现金" />
+              <Bar dataKey="经营现金" fill="#3b82f6" name="平均经营现金" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -239,7 +239,7 @@ export default function CashRankingPage() {
               value={industry}
               allowClear
               showSearch
-              placeholder="请选择行业"
+              placeholder="请选择所属行业"
               onChange={(v) => {
                 setIndustry(v);
                 setCurrent(1);

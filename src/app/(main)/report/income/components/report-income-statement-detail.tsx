@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: MIT
 
-
 import dayjs from 'dayjs';
 import {
   Descriptions,
   Drawer,
-  Button,
-  Space,
 } from 'antd';
 import { ReportIncomeStatementDetail } from '@/types/report-income-statement';
-import React, { useMemo } from 'react';
+import React from 'react';
+// 导入会计格式化工具
+import { formatAccounting } from '@/utils/math-util';
 
 interface ReportIncomeStatementDetailDrawerProps {
   isReportIncomeStatementDetailDrawerVisible: boolean;
@@ -25,7 +24,6 @@ const ReportIncomeStatementDetailComponent: React.FC<ReportIncomeStatementDetail
   loading
 }) => {
 
-  
   return (
     <Drawer
       title="利润详情"
@@ -35,64 +33,64 @@ const ReportIncomeStatementDetailComponent: React.FC<ReportIncomeStatementDetail
       loading={loading}
       width={600}
     >
-      { reportIncomeStatementDetail && (
+      {reportIncomeStatementDetail && (
         <Descriptions column={1} bordered>
           <Descriptions.Item label="股票代码">
-              { reportIncomeStatementDetail.stock_code}
+            {reportIncomeStatementDetail.stock_code}
           </Descriptions.Item>
           <Descriptions.Item label="股票简称">
-              { reportIncomeStatementDetail.stock_name}
+            {reportIncomeStatementDetail.stock_name}
           </Descriptions.Item>
           <Descriptions.Item label="交易所">
-              { reportIncomeStatementDetail.exchange}
+            {reportIncomeStatementDetail.exchange}
           </Descriptions.Item>
+
+          {/* 利润与收入字段 - 使用 formatAccounting 并添加单位 */}
           <Descriptions.Item label="净利润">
-              { reportIncomeStatementDetail.net_profit}
+            {formatAccounting(reportIncomeStatementDetail.net_profit)} 元
           </Descriptions.Item>
           <Descriptions.Item label="净利润同比">
-              { reportIncomeStatementDetail.net_profit_yoy}
+            {reportIncomeStatementDetail.net_profit_yoy} %
           </Descriptions.Item>
           <Descriptions.Item label="营业总收入">
-              { reportIncomeStatementDetail.total_operating_income}
+            {formatAccounting(reportIncomeStatementDetail.total_operating_income)} 元
           </Descriptions.Item>
           <Descriptions.Item label="营业总收入同比">
-              { reportIncomeStatementDetail.total_operating_income_yoy}
+            {reportIncomeStatementDetail.total_operating_income_yoy} %
           </Descriptions.Item>
+
+          {/* 支出明细字段 */}
           <Descriptions.Item label="营业总支出-营业支出">
-              { reportIncomeStatementDetail.operating_expenses}
+            {formatAccounting(reportIncomeStatementDetail.operating_expenses)} 元
           </Descriptions.Item>
           <Descriptions.Item label="营业总支出-销售费用">
-              { reportIncomeStatementDetail.sales_expenses}
+            {formatAccounting(reportIncomeStatementDetail.sales_expenses)} 元
           </Descriptions.Item>
           <Descriptions.Item label="营业总支出-管理费用">
-              { reportIncomeStatementDetail.management_expenses}
+            {formatAccounting(reportIncomeStatementDetail.management_expenses)} 元
           </Descriptions.Item>
           <Descriptions.Item label="营业总支出-财务费用">
-              { reportIncomeStatementDetail.financial_expenses}
+            {formatAccounting(reportIncomeStatementDetail.financial_expenses)} 元
           </Descriptions.Item>
           <Descriptions.Item label="营业总支出-营业总支出">
-              { reportIncomeStatementDetail.total_operating_expenses}
+            {formatAccounting(reportIncomeStatementDetail.total_operating_expenses)} 元
           </Descriptions.Item>
+
           <Descriptions.Item label="营业利润">
-              { reportIncomeStatementDetail.operating_profit}
+            {formatAccounting(reportIncomeStatementDetail.operating_profit)} 元
           </Descriptions.Item>
           <Descriptions.Item label="利润总额">
-              { reportIncomeStatementDetail.total_profit}
+            {formatAccounting(reportIncomeStatementDetail.total_profit)} 元
           </Descriptions.Item>
-          <Descriptions.Item label="公告日期">
-              {dayjs(reportIncomeStatementDetail.announcement_date).format('YYYY-MM-DD')}
-          </Descriptions.Item>
+
           <Descriptions.Item label="年份">
-              { reportIncomeStatementDetail.year}
+            {reportIncomeStatementDetail.year} 年
           </Descriptions.Item>
           <Descriptions.Item label="季度">
-              { reportIncomeStatementDetail.quarter}
-          </Descriptions.Item>
-          <Descriptions.Item label="创建时间">
-              {dayjs(reportIncomeStatementDetail.created_at).format('YYYY-MM-DD')}
+            {reportIncomeStatementDetail.quarter}
           </Descriptions.Item>
           <Descriptions.Item label="更新时间">
-              {dayjs(reportIncomeStatementDetail.updated_at).format('YYYY-MM-DD')}
+            {dayjs(reportIncomeStatementDetail.updated_at).format('YYYY-MM-DD')}
           </Descriptions.Item>
         </Descriptions>
       )}

@@ -9,7 +9,7 @@ interface QueryRankingMultipleFactorProps {
   onQueryRankingMultipleFactorFinish: (values: any) => void;
   onQueryRankingMultipleFactorReset: () => void;
   onQueryRankingMultipleFactorForm: FormInstance;
-  industryList: string[] | undefined; 
+  industryList: string[] | undefined;
 }
 
 const queryRankingMultipleFactorFormItemLayout = {
@@ -23,7 +23,7 @@ const QueryRankingMultipleFactorComponent: React.FC<QueryRankingMultipleFactorPr
   onQueryRankingMultipleFactorForm,
   industryList,
 }) => {
-  
+
   // 转换选项的辅助函数
   const industryOptions = industryList?.map(value => ({
     value,
@@ -51,7 +51,7 @@ const QueryRankingMultipleFactorComponent: React.FC<QueryRankingMultipleFactorPr
           <Select
             allowClear
             showSearch
-            placeholder="请选择行业"
+            placeholder="请选择所属行业"
             options={industryOptions}
             filterOption={(input, option) =>
               (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
@@ -63,12 +63,12 @@ const QueryRankingMultipleFactorComponent: React.FC<QueryRankingMultipleFactorPr
         <Form.Item name="query_period" label="查询周期" >
           <Select
             options={[
-              { label: "最新", value: 0 },
               { label: "近一年", value: 1 },
               { label: "近三年", value: 3 },
               { label: "近五年", value: 5 },
               { label: "近十年", value: 10 },
               { label: "近十五年", value: 15 },
+              { label: "近二十年", value: 20 },
             ]}
             style={{ width: 150 }}
           />

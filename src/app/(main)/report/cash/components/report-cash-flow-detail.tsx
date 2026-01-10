@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: MIT
 
-
 import dayjs from 'dayjs';
 import {
   Descriptions,
   Drawer,
-  Button,
-  Space,
 } from 'antd';
 import { ReportCashFlowDetail } from '@/types/report-cash-flow';
-import React, { useMemo } from 'react';
+import React from 'react';
+// 导入会计格式化工具
+import { formatAccounting } from '@/utils/math-util';
 
 interface ReportCashFlowDetailDrawerProps {
   isReportCashFlowDetailDrawerVisible: boolean;
@@ -25,7 +24,6 @@ const ReportCashFlowDetailComponent: React.FC<ReportCashFlowDetailDrawerProps> =
   loading
 }) => {
 
-  
   return (
     <Drawer
       title="现金流量详情"
@@ -35,55 +33,57 @@ const ReportCashFlowDetailComponent: React.FC<ReportCashFlowDetailDrawerProps> =
       loading={loading}
       width={600}
     >
-      { reportCashFlowDetail && (
+      {reportCashFlowDetail && (
         <Descriptions column={1} bordered>
           <Descriptions.Item label="股票代码">
-              { reportCashFlowDetail.stock_code}
+            {reportCashFlowDetail.stock_code}
           </Descriptions.Item>
           <Descriptions.Item label="股票简称">
-              { reportCashFlowDetail.stock_name}
+            {reportCashFlowDetail.stock_name}
           </Descriptions.Item>
           <Descriptions.Item label="交易所">
-              { reportCashFlowDetail.exchange}
+            {reportCashFlowDetail.exchange}
           </Descriptions.Item>
+
+          {/* 现金流金额字段 - 使用 formatAccounting 并添加单位 */}
           <Descriptions.Item label="净现金流-净现金流">
-              { reportCashFlowDetail.net_cash_flow}
+            {formatAccounting(reportCashFlowDetail.net_cash_flow)} 元
           </Descriptions.Item>
+          
+          {/* 同比/占比字段 - 添加百分比单位 */}
           <Descriptions.Item label="净现金流-同比增长">
-              { reportCashFlowDetail.net_cash_flow_yoy}
+            {reportCashFlowDetail.net_cash_flow_yoy} %
           </Descriptions.Item>
+
           <Descriptions.Item label="经营性现金流-现金流量净额">
-              { reportCashFlowDetail.operating_cash_flow}
+            {formatAccounting(reportCashFlowDetail.operating_cash_flow)} 元
           </Descriptions.Item>
           <Descriptions.Item label="经营性现金流-净现金流占比">
-              { reportCashFlowDetail.operating_cash_flow_ratio}
+            {reportCashFlowDetail.operating_cash_flow_ratio} %
           </Descriptions.Item>
+
           <Descriptions.Item label="投资性现金流-现金流量净额">
-              { reportCashFlowDetail.investing_cash_flow}
+            {formatAccounting(reportCashFlowDetail.investing_cash_flow)} 元
           </Descriptions.Item>
           <Descriptions.Item label="投资性现金流-净现金流占比">
-              { reportCashFlowDetail.investing_cash_flow_ratio}
+            {reportCashFlowDetail.investing_cash_flow_ratio} %
           </Descriptions.Item>
+
           <Descriptions.Item label="融资性现金流-现金流量净额">
-              { reportCashFlowDetail.financing_cash_flow}
+            {formatAccounting(reportCashFlowDetail.financing_cash_flow)} 元
           </Descriptions.Item>
           <Descriptions.Item label="融资性现金流-净现金流占比">
-              { reportCashFlowDetail.financing_cash_flow_ratio}
+            {reportCashFlowDetail.financing_cash_flow_ratio} %
           </Descriptions.Item>
-          <Descriptions.Item label="公告日期">
-              { reportCashFlowDetail.announcement_date}
-          </Descriptions.Item>
+
           <Descriptions.Item label="年份">
-              { reportCashFlowDetail.year}
+            {reportCashFlowDetail.year} 年
           </Descriptions.Item>
           <Descriptions.Item label="季度">
-              { reportCashFlowDetail.quarter}
-          </Descriptions.Item>
-          <Descriptions.Item label="创建时间">
-              {dayjs(reportCashFlowDetail.created_at).format('YYYY-MM-DD')}
+            {reportCashFlowDetail.quarter}
           </Descriptions.Item>
           <Descriptions.Item label="更新时间">
-              {dayjs(reportCashFlowDetail.updated_at).format('YYYY-MM-DD')}
+            {dayjs(reportCashFlowDetail.updated_at).format('YYYY-MM-DD')}
           </Descriptions.Item>
         </Descriptions>
       )}

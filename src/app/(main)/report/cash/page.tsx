@@ -36,6 +36,7 @@ import ImportReportCashFlowComponent from './components/import-report-cash-flow'
 import ReportCashFlowDetailComponent from './components/report-cash-flow-detail';
 import QueryReportCashFlowComponent from './components/query-report-cash-flow';
 import UpdateReportCashFlowComponent from './components/update-report-cash-flow';
+import { formatAccounting } from '@/utils/math-util';
 
 const ReportCashFlowPage: React.FC = () => {
   // 配置模块
@@ -154,7 +155,7 @@ const ReportCashFlowPage: React.FC = () => {
       dataIndex: "stock_name",
       key: "stock_name",
       render: (text) => (text ? text : "-"),
-      width: 120,
+      width: 100,
       fixed: 'left',
       ellipsis: true,
     },
@@ -163,79 +164,81 @@ const ReportCashFlowPage: React.FC = () => {
       dataIndex: "stock_code",
       key: "stock_code",
       render: (text) => (text ? text : "-"),
-      width: 120,
+      width: 100,
+      fixed: 'left',
       ellipsis: true,
     },
     {
-      title: "净现金流-净现金流",
+      title: "净现金流(元)",
       dataIndex: "net_cash_flow",
       key: "net_cash_flow",
-      render: (text) => (text ? text : "-"),
+      render: (text) => formatAccounting(text),
       width: 140,
       ellipsis: true,
+      align: 'right'
     },
     {
-      title: "净现金流-同比增长",
+      title: "净现金流同比增长(%)",
       dataIndex: "net_cash_flow_yoy",
       key: "net_cash_flow_yoy",
       render: (text) => (text ? text : "-"),
       width: 140,
       ellipsis: true,
+      align: 'right'
     },
     {
-      title: "经营性现金流-现金流量净额",
+      title: "经营性现金流量净额(元)",
       dataIndex: "operating_cash_flow",
       key: "operating_cash_flow",
-      render: (text) => (text ? text : "-"),
-      width: 140,
+      render: (text) => formatAccounting(text),
+      width: 160,
       ellipsis: true,
+      align: 'right'
     },
     {
-      title: "经营性现金流-净现金流占比",
+      title: "净现金流占比(%)",
       dataIndex: "operating_cash_flow_ratio",
       key: "operating_cash_flow_ratio",
       render: (text) => (text ? text : "-"),
       width: 140,
       ellipsis: true,
+      align: 'right'
     },
     {
-      title: "投资性现金流-现金流量净额",
+      title: "投资性现金流量净额(元)",
       dataIndex: "investing_cash_flow",
       key: "investing_cash_flow",
-      render: (text) => (text ? text : "-"),
-      width: 140,
+      render: (text) => formatAccounting(text),
+      width: 160,
       ellipsis: true,
+      align: 'right'
     },
     {
-      title: "投资性现金流-净现金流占比",
+      title: "净现金流占比(%)",
       dataIndex: "investing_cash_flow_ratio",
       key: "investing_cash_flow_ratio",
       render: (text) => (text ? text : "-"),
       width: 140,
       ellipsis: true,
+      align: 'right'
     },
     {
-      title: "融资性现金流-现金流量净额",
+      title: "融资性现金流量净额(元)",
       dataIndex: "financing_cash_flow",
       key: "financing_cash_flow",
-      render: (text) => (text ? text : "-"),
+      render: (text) => formatAccounting(text),
       width: 140,
       ellipsis: true,
+      align: 'right'
     },
     {
-      title: "融资性现金流-净现金流占比",
+      title: "净现金流占比(%)",
       dataIndex: "financing_cash_flow_ratio",
       key: "financing_cash_flow_ratio",
       render: (text) => (text ? text : "-"),
       width: 140,
       ellipsis: true,
-    },
-
-    {
-      title: "季度",
-      dataIndex: "quarter",
-      key: "quarter",
-      width: 60,
+      align: 'right'
     },
     {
       title: "年份",
@@ -245,11 +248,18 @@ const ReportCashFlowPage: React.FC = () => {
       width: 80,
     },
     {
+      title: "季度",
+      dataIndex: "quarter",
+      key: "quarter",
+      width: 60,
+      fixed: 'right',
+    },
+    {
       title: "操作",
       key: "action",
       align: "center",
       fixed: 'right',
-      width: 180,
+      width: 80,
       render: (_, record) => (
         <div className="flex gap-2 items-center justify-center">
           <button
@@ -260,36 +270,6 @@ const ReportCashFlowPage: React.FC = () => {
             <Eye className="w-3 h-3" />
             详情
           </button>
-          <button
-            type="button"
-            className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={() => onUpdateReportCashFlow(record)}
-          >
-            <PenLine className="w-3 h-3" />
-            编辑
-          </button>
-          <Popconfirm
-            title="确认删除"
-            description="确定删除吗? 删除后将无法找回"
-            onConfirm={() => handleDeleteReportCashFlow(record)}
-            okText="确认"
-            cancelText="取消"
-          >
-            <button
-              type="button"
-              className="flex items-center gap-0.5 text-xs btn-remove"
-            >
-              <Trash2 className="w-3 h-3" />
-              删除
-            </button>
-          </Popconfirm>
-
-          {showMore && (
-            <button type="button" className="flex items-center gap-0.5 text-xs btn-operation">
-              <span>更多</span>
-              <MoreHorizontal className="w-3 h-3" />
-            </button>
-          )}
         </div>
       ),
     },

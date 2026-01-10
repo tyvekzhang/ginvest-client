@@ -44,7 +44,7 @@ const StockDetailComponent: React.FC<StockDetailDrawerProps> = ({
                     <Descriptions.Item label="所属市场">
                         {stockDetail.market_type}
                     </Descriptions.Item>
-                    <Descriptions.Item label="行业">
+                    <Descriptions.Item label="所属行业">
                         {stockDetail.industry}
                     </Descriptions.Item>
                     <Descriptions.Item label="成立日期">

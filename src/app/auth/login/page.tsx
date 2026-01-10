@@ -1,26 +1,18 @@
-'use client';
+"use client"
 
-import { sendVerificationCode, } from '@/service/auth-service';
-import { useAuthStore } from '@/stores/auth-store';
-import { EmailAndCodeRequest, OAuth2PasswordRequestForm, SendVerificationCodeRequest } from '@/types/auth';
-import {
-  Button,
-  Card,
-  Checkbox,
-  Form,
-  Input,
-  Tabs,
-  Typography,
-  message,
-} from 'antd';
-import { motion } from 'framer-motion';
-import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { sendVerificationCode } from "@/service/auth-service"
+import { useAuthStore } from "@/stores/auth-store"
+import type { EmailAndCodeRequest, OAuth2PasswordRequestForm, SendVerificationCodeRequest } from "@/types/auth"
+import { Button, Card, Checkbox, Form, Input, Tabs, Typography, message } from "antd"
+import { motion } from "framer-motion"
+import { Eye, EyeOff, Lock, Mail, User } from "lucide-react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import SimpleClickCaptcha from "@/components/click-captcha"
 
-const { Title, Text } = Typography;
-const { TabPane } = Tabs;
+const { Title, Text } = Typography
+const { TabPane } = Tabs
 
 const CardDecorativeBubble = () => {
   return (
@@ -28,105 +20,103 @@ const CardDecorativeBubble = () => {
       animate={{ scale: 1.2 }}
       transition={{
         duration: 3,
-        repeat: Infinity,
-        repeatType: 'reverse',
-        ease: 'easeInOut',
+        repeat: Number.POSITIVE_INFINITY,
+        repeatType: "reverse",
+        ease: "easeInOut",
       }}
       className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-200/30 to-purple-200/30 rounded-full -mr-16 -mt-16"
     />
-  );
-};
+  )
+}
 
 export default function LoginPage() {
-  const router = useRouter();
+  const router = useRouter()
   useEffect(() => {
-    useAuthStore.persist.rehydrate();
-  }, []);
+    useAuthStore.persist.rehydrate()
+  }, [])
 
-  const {
-    loading,
-    login,
-    loginWithCode
-  } = useAuthStore();
-  const [form] = Form.useForm();
-  const [codeForm] = Form.useForm();
-  const [activeTab, setActiveTab] = useState('password');
-  const [countdown, setCountdown] = useState(0);
+  const { loading, login, loginWithCode } = useAuthStore()
+  const [form] = Form.useForm()
+  const [codeForm] = Form.useForm()
+  const [activeTab, setActiveTab] = useState("password")
+  const [countdown, setCountdown] = useState(0)
+  const [showCaptcha, setShowCaptcha] = useState(false)
 
   const validateUsername = (username: string) => {
-    const basicRegex = /^.{5,}$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^1[3-9]\d{9}$/;
-    return (
-      basicRegex.test(username) ||
-      emailRegex.test(username) ||
-      phoneRegex.test(username)
-    );
-  };
+    const basicRegex = /^.{5,}$/
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const phoneRegex = /^1[3-9]\d{9}$/
+    return basicRegex.test(username) || emailRegex.test(username) || phoneRegex.test(username)
+  }
 
-  const validateEmail = (val: string) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+  const validateEmail = (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)
 
   const onFinish = async (values: OAuth2PasswordRequestForm) => {
     try {
-      await login(values);
-      message.success('登录成功！');
-      router.push('/');
+      await login(values)
+      message.success("登录成功！")
+      router.push("/")
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   const onCodeFinish = async () => {
-    debugger
-    const email = codeForm.getFieldValue('email');
-    const code = codeForm.getFieldValue('code');
+    const email = codeForm.getFieldValue("email")
+    const code = codeForm.getFieldValue("code")
     const req: EmailAndCodeRequest = {
       email: email,
-      code: code
+      code: code,
     }
     try {
-      await loginWithCode(req);
-      message.success('登录成功');
-      router.push('/');
+      await loginWithCode(req)
+      message.success("登录成功")
+      router.push("/")
     } catch (error) {
-      message.error('登陆失败');
+      
     }
-  };
+  }
 
   const handleSendCode = async () => {
-    const email = codeForm.getFieldValue('email');
+    const email = codeForm.getFieldValue("email")
     if (!email || !validateEmail(email)) {
-      message.error('请输入有效的邮箱地址');
-      return;
+      message.error("请输入有效的邮箱地址")
+      return
     }
 
+    // Show captcha modal
+    setShowCaptcha(true)
+  }
+
+  const handleCaptchaSuccess = async () => {
+    setShowCaptcha(false)
+
+    const email = codeForm.getFieldValue("email")
     const req: SendVerificationCodeRequest = {
-      email: email
+      email: email,
     }
 
-    message.success("验证码已发送, 请查看邮箱");
+    message.success("验证码已发送, 请查看邮箱")
     await sendVerificationCode(req)
 
-    setCountdown(60);
+    setCountdown(60)
 
     const timer = setInterval(() => {
       setCountdown((pre) => {
         if (pre <= 1) {
-          clearInterval(timer);
-          return 0;
+          clearInterval(timer)
+          return 0
         }
-        return pre - 1;
-      });
-    }, 1000);
-  };
-
+        return pre - 1
+      })
+    }, 1000)
+  }
 
   const handleThirdPartyLogin = (provider: string) => {
-    message.info(`${provider}登录功能马上就来...`);
-  };
+    message.info(`${provider}登录功能马上就来...`)
+  }
 
-  const linkClass = 'text-sm text-blue-400 hover:text-blue-500 font-normal';
+  const linkClass = "text-sm text-blue-400 hover:text-blue-500 font-normal"
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-gray to-purple-50 flex items-center justify-center p-4 relative overflow-hidden">
@@ -157,14 +147,12 @@ export default function LoginPage() {
                   name="username"
                   validateTrigger="onBlur"
                   rules={[
-                    { required: true, message: '请输入用户名' },
+                    { required: true, message: "请输入用户名" },
                     {
                       validator: (_, value) => {
-                        if (!value) return Promise.resolve();
-                        if (validateUsername(value)) return Promise.resolve();
-                        return Promise.reject(
-                          new Error('请输入有效的邮箱地址'),
-                        );
+                        if (!value) return Promise.resolve()
+                        if (validateUsername(value)) return Promise.resolve()
+                        return Promise.reject(new Error("请输入有效的邮箱地址"))
                       },
                     },
                   ]}
@@ -179,8 +167,8 @@ export default function LoginPage() {
                 <Form.Item
                   name="password"
                   rules={[
-                    { required: true, message: '请输入密码' },
-                    { min: 6, message: '密码至少6位' },
+                    { required: true, message: "请输入密码" },
+                    { min: 6, message: "密码至少6位" },
                   ]}
                   validateTrigger="onBlur"
                 >
@@ -188,18 +176,12 @@ export default function LoginPage() {
                     prefix={<Lock className="text-gray-400" size={18} />}
                     placeholder="密码"
                     className="rounded-lg h-12"
-                    iconRender={(visible) =>
-                      visible ? <Eye size={18} /> : <EyeOff size={18} />
-                    }
+                    iconRender={(visible) => (visible ? <Eye size={18} /> : <EyeOff size={18} />)}
                   />
                 </Form.Item>
 
                 <div className="flex justify-between items-center mb-6">
-                  <Form.Item
-                    name="remember"
-                    valuePropName="checked"
-                    className="mb-0"
-                  >
+                  <Form.Item name="remember" valuePropName="checked" className="mb-0">
                     <Checkbox>记住我</Checkbox>
                   </Form.Item>
                   {/* <Link href="/forgot-password" className={linkClass} >
@@ -214,7 +196,7 @@ export default function LoginPage() {
                     loading={loading}
                     className="w-full h-12 rounded-lg bg-primary border-0 hover:opacity-80 transition-all duration-200"
                   >
-                    {loading ? '登录中...' : '登录'}
+                    {loading ? "登录中..." : "登录"}
                   </Button>
                 </Form.Item>
               </Form>
@@ -236,13 +218,11 @@ export default function LoginPage() {
                   name="email"
                   validateTrigger="onBlur"
                   rules={[
-                    { required: true, message: '请输入邮箱' },
+                    { required: true, message: "请输入邮箱" },
                     {
                       validator(_, value) {
-                        if (!value) return Promise.resolve();
-                        return validateEmail(value)
-                          ? Promise.resolve()
-                          : Promise.reject('请输入有效邮箱');
+                        if (!value) return Promise.resolve()
+                        return validateEmail(value) ? Promise.resolve() : Promise.reject("请输入有效邮箱")
                       },
                     },
                   ]}
@@ -258,8 +238,8 @@ export default function LoginPage() {
                 <Form.Item
                   name="code"
                   rules={[
-                    { required: true, message: '请输入验证码' },
-                    { len: 6, message: '验证码为 6 位数字' },
+                    { required: true, message: "请输入验证码" },
+                    { len: 6, message: "验证码为 6 位数字" },
                   ]}
                 >
                   <div className="flex space-x-2">
@@ -268,22 +248,14 @@ export default function LoginPage() {
                       placeholder="验证码"
                       className="rounded-lg h-12 flex-1"
                     />
-                    <Button
-                      className="h-12"
-                      onClick={handleSendCode}
-                      disabled={countdown > 0}
-                    >
-                      {countdown > 0 ? `${countdown}s` : '获取验证码'}
+                    <Button className="h-12" onClick={handleSendCode} disabled={countdown > 0}>
+                      {countdown > 0 ? `${countdown}s` : "获取验证码"}
                     </Button>
                   </div>
                 </Form.Item>
 
                 <div className="flex justify-between items-center mb-6">
-                  <Form.Item
-                    name="remember"
-                    valuePropName="checked"
-                    className="mb-0"
-                  >
+                  <Form.Item name="remember" valuePropName="checked" className="mb-0">
                     <Checkbox>记住我</Checkbox>
                   </Form.Item>
                 </div>
@@ -295,7 +267,7 @@ export default function LoginPage() {
                     loading={loading}
                     className="w-full h-12 rounded-lg bg-primary border-0 hover:opacity-80 transition-all duration-200"
                   >
-                    {loading ? '登录中...' : '登录'}
+                    {loading ? "登录中..." : "登录"}
                   </Button>
                 </Form.Item>
               </Form>
@@ -341,6 +313,8 @@ export default function LoginPage() {
           </Text>
         </div>
       </div>
+
+      <SimpleClickCaptcha open={showCaptcha} onSuccess={handleCaptchaSuccess} onCancel={() => setShowCaptcha(false)} />
     </div>
-  );
+  )
 }

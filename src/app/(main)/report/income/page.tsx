@@ -35,6 +35,7 @@ import ImportReportIncomeStatementComponent from './components/import-report-inc
 import ReportIncomeStatementDetailComponent from './components/report-income-statement-detail';
 import QueryReportIncomeStatementComponent from './components/query-report-income-statement';
 import UpdateReportIncomeStatementComponent from './components/update-report-income-statement';
+import { formatAccounting } from '@/utils/math-util';
 
 const ReportIncomeStatementPage: React.FC = () => {
   // 配置模块
@@ -144,14 +145,15 @@ const ReportIncomeStatementPage: React.FC = () => {
       dataIndex: "No",
       key: "No",
       render: (_: number, _record: ReportIncomeStatement, rowIndex: number) => rowIndex + 1,
-      width: 60,
+      width: 40,
+      fixed: 'left',
     },
     {
       title: "股票简称",
       dataIndex: "stock_name",
       key: "stock_name",
       render: (text) => (text ? text : "-"),
-      width: 100,
+      width: 60,
       fixed: 'left',
       ellipsis: true,
     },
@@ -160,42 +162,40 @@ const ReportIncomeStatementPage: React.FC = () => {
       dataIndex: "stock_code",
       key: "stock_code",
       render: (text) => (text ? text : "-"),
-      width: 100,
+      width: 60,
       ellipsis: true,
     },
     {
-      title: "净利润",
+      title: "净利润(元)",
       dataIndex: "net_profit",
       key: "net_profit",
-      render: (text) => (text ? text : "-"),
-      width: 120,
+      render: (text) => formatAccounting(text),
+      width: 80,
+      align: 'right'
     },
     {
-      title: "净利润同比",
+      title: "净利润同比(%)",
       dataIndex: "net_profit_yoy",
       key: "net_profit_yoy",
       render: (text) => (text ? text : "-"),
-      width: 120,
+      width: 80,
+      align: 'right'
     },
     {
-      title: "营业总收入",
+      title: "营业总收入(元)",
       dataIndex: "total_operating_income",
       key: "total_operating_income",
-      render: (text) => (text ? text : "-"),
-      width: 120,
+      render: (text) => formatAccounting(text),
+      width: 100,
+      align: 'right'
     },
     {
-      title: "营业总收入同比",
+      title: "营业总收入同比(%)",
       dataIndex: "total_operating_income_yoy",
       key: "total_operating_income_yoy",
       render: (text) => (text ? text : "-"),
-      width: 120,
-    },
-    {
-      title: "季度",
-      dataIndex: "quarter",
-      key: "quarter",
-      width: 60,
+      width: 100,
+      align: 'right'
     },
     {
       title: "年份",
@@ -205,11 +205,18 @@ const ReportIncomeStatementPage: React.FC = () => {
       width: 60,
     },
     {
+      title: "季度",
+      dataIndex: "quarter",
+      key: "quarter",
+      width: 40,
+      fixed: 'right',
+    },
+    {
       title: "操作",
       key: "action",
       align: "center",
       fixed: 'right',
-      width: 160,
+      width: 40,
       render: (_, record) => (
         <div className="flex gap-2 items-center justify-center">
           <button
@@ -220,36 +227,6 @@ const ReportIncomeStatementPage: React.FC = () => {
             <Eye className="w-3 h-3" />
             详情
           </button>
-          <button
-            type="button"
-            className="flex items-center gap-0.5 text-xs btn-operation"
-            onClick={() => onUpdateReportIncomeStatement(record)}
-          >
-            <PenLine className="w-3 h-3" />
-            编辑
-          </button>
-          <Popconfirm
-            title="确认删除"
-            description="确定删除吗? 删除后将无法找回"
-            onConfirm={() => handleDeleteReportIncomeStatement(record)}
-            okText="确认"
-            cancelText="取消"
-          >
-            <button
-              type="button"
-              className="flex items-center gap-0.5 text-xs btn-remove"
-            >
-              <Trash2 className="w-3 h-3" />
-              删除
-            </button>
-          </Popconfirm>
-
-          {showMore && (
-            <button type="button" className="flex items-center gap-0.5 text-xs btn-operation">
-              <span>更多</span>
-              <MoreHorizontal className="w-3 h-3" />
-            </button>
-          )}
         </div>
       ),
     },

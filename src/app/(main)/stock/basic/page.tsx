@@ -92,10 +92,11 @@ const StockPage: React.FC = () => {
 
   const onQueryStockFinish = async () => {
     const values = queryStockForm.getFieldsValue();
-    const { create_time } = values;
-    if (create_time) {
-      const [startDate, endDate] = create_time;
-      values.create_time = [
+    debugger
+    const { listing_date } = values;
+    if (listing_date) {
+      const [startDate, endDate] = listing_date;
+      values.listing_date = [
         startDate.format('YYYY-MM-DD'),
         endDate.format('YYYY-MM-DD'),
       ];
@@ -149,7 +150,7 @@ const StockPage: React.FC = () => {
       dataIndex: "stock_code",
       key: "stock_code",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: "10%",
       ellipsis: true,
     },
     {
@@ -157,7 +158,7 @@ const StockPage: React.FC = () => {
       dataIndex: "stock_name",
       key: "stock_name",
       render: (text) => (text ? text : "-"),
-      width: "12%",
+      width: "10%",
       ellipsis: true,
     },
     {
@@ -171,11 +172,11 @@ const StockPage: React.FC = () => {
       ellipsis: true,
     },
     {
-      title: "行业",
+      title: "所属行业",
       dataIndex: "industry",
       key: "industry",
       render: (text) => (text ? text : "-"),
-      width: "16%",
+      width: "18%",
       ellipsis: true,
     },
     {
@@ -195,6 +196,7 @@ const StockPage: React.FC = () => {
         const num = Number(text) * 10000;
         return num.toLocaleString('zh-CN');
       },
+      align: 'right',
       width: "14%",
       ellipsis: true,
     },

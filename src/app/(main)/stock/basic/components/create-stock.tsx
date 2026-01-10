@@ -72,8 +72,8 @@ const CreateStockComponent: React.FC<CreateStockProps> = ({
           <Form.Item name="listing_date" label="上市日期" rules={[{ required: false, message: '请输入上市日期' }]}>
             <DatePicker format="YYYY-MM-DD" placeholder="请选择上市日期" />
           </Form.Item>
-          <Form.Item name="industry" label="行业" rules={[{ required: false, message: '请输入行业' }]}>
-            <Input placeholder="请输入行业" />
+          <Form.Item name="industry" label="所属行业" rules={[{ required: false, message: '请输入所属行业' }]}>
+            <Input placeholder="请输入所属行业" />
           </Form.Item>
           <Form.Item name="province" label="省份" rules={[{ required: false, message: '请输入省份' }]}>
             <Input placeholder="请输入省份" />

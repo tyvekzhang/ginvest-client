@@ -25,7 +25,7 @@ const COLORS = {
   chinaRed: "#ff8c42",
   chinaRedLight: "#fff1f0",
   chinaRedBorder: "#ffa39e",
-  usaBlue: "#1677ff",
+  usaBlue: "#5B91FD",
   usaBlueLight: "#e6f4ff",
   usaBlueBorder: "#91caff",
   positive: "#52c41a",
@@ -178,7 +178,7 @@ const motivationalQuotes = [
                 }}
               />
               <Tooltip
-                formatter={(value: number) => [value.toFixed(2) + "%", ""]}
+                formatter={(value: number) => [value.toFixed(2) + "%", "收益率"]}
                 labelFormatter={(label) => `期限: ${label}`}
                 contentStyle={{ borderRadius: 4, border: `1px solid ${COLORS.gridLine}` }}
               />
@@ -248,7 +248,7 @@ const motivationalQuotes = [
                 }}
               />
               <Tooltip
-                formatter={(value: number) => [value.toFixed(2) + "%", ""]}
+                formatter={(value: number) => [value.toFixed(2) + "%", "基准利率"]}
                 labelFormatter={(label) => `周期: ${label}`}
                 contentStyle={{ borderRadius: 4, border: `1px solid ${COLORS.gridLine}` }}
               />
@@ -323,7 +323,7 @@ const motivationalQuotes = [
                 }}
               />
               <Tooltip
-                formatter={(value: number) => [value.toFixed(4), ""]}
+                formatter={(value: number) => [value.toFixed(4), "美元/人民币"]}
                 labelFormatter={(label) => `季度: ${label}`}
                 contentStyle={{ borderRadius: 4, border: `1px solid ${COLORS.gridLine}` }}
               />

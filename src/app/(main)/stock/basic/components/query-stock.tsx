@@ -57,7 +57,7 @@ const QueryStockComponent: React.FC<QueryStockProps> = ({
           <Select
             allowClear
             showSearch
-            placeholder="请选择行业"
+            placeholder="请选择所属行业"
             options={industryOptions}
             filterOption={(input, option) =>
               (option?.label ?? '').toLowerCase().includes(input.toLowerCase())

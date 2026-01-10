@@ -567,7 +567,7 @@ export default function StockDetail() {
   }
 
   return (
-    <div className="min-h-screen px-5 bg-white">
+    <div className="max-h-[800px] px-5 bg-white overflow-auto">
       <div className="mt-4 mb-2">
         <Button
           icon={<ArrowLeft size={16} />}
@@ -583,7 +583,7 @@ export default function StockDetail() {
           <div >
             <h1 className="text-xl md:text-2xl font-bold mb-2">{stockName}</h1>
             <p className="text-gray-600 text-base">
-              股票代码: {stock_code} | 行业: {abstract?.profitability[0]?.industry}
+              股票代码: {stock_code} | 所属行业: {abstract?.profitability[0]?.industry}
             </p>
           </div>
           <div className="flex items-center gap-3 px-4 py-2 rounded-lg borde">
@@ -591,7 +591,6 @@ export default function StockDetail() {
               value={timePeriod}
               onChange={setTimePeriod}
               options={[
-                { label: "最新", value: 0 },
                 { label: "近一年", value: 1 },
                 { label: "近三年", value: 3 },
                 { label: "近五年", value: 5 },
@@ -624,7 +623,13 @@ export default function StockDetail() {
                   {renderChart("growth")}
                 </Card>
               </Col>
-
+              {/* 8. 分红情况 */}
+              <Col span={24}>
+                <Card className="!rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+                  <SectionHeader title="分红情况" icon={Coins} configKey="dividend" />
+                  {renderChart("dividend", dividendChartData)}
+                </Card>
+              </Col>
               {/* 3. 偿债风险 */}
               <Col span={24}>
                 <Card className="!rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
@@ -665,13 +670,7 @@ export default function StockDetail() {
                 </Card>
               </Col>
 
-              {/* 8. 分红情况 */}
-              <Col span={24}>
-                <Card className="!rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
-                  <SectionHeader title="分红情况" icon={Coins} configKey="dividend" />
-                  {renderChart("dividend", dividendChartData)}
-                </Card>
-              </Col>
+
             </Row>
           )}
         </Spin>

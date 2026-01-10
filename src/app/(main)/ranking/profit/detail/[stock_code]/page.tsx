@@ -71,7 +71,7 @@ export default function DetailPage() {
             <div>
               <h1 className="text-xl md:text-2xl font-bold mb-2">{company.stock_name}</h1>
               <p className="text-gray-600 text-base">
-                股票代码: {company.stock_code} | 行业: {company.industry}
+                股票代码: {company.stock_code} | 所属行业: {company.industry}
               </p>
             </div>
             <Select

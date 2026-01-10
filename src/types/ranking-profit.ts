@@ -53,7 +53,7 @@ export interface RankingProfit {
     
     total_profit: number;
     
-    avg_revenue: number;
+    avg_profit: number;
     
     cagr: number;
     
