@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { Card, Button, Spin, Space, Row, Col, Typography, Select } from "antd"
+import { Card, Button, Spin, Row, Col, Typography, Select } from "antd"
 import { ArrowLeft, TrendingUp, ShieldAlert, Zap, Activity, PieChart, BarChart3, DollarSign, Coins } from "lucide-react"
 import { useParams, useRouter, useSearchParams } from "next/navigation"
 import {
@@ -42,6 +42,32 @@ interface IndicatorConfig {
   rightAxisLabel?: string
   fields: FieldConfig[]
   useQuarterlyData?: boolean
+}
+
+// 格式化年份显示：5位数年份转为 "年-Q季度" 格式
+function formatYearDisplay(year: number | string): string {
+  const yearStr = String(year)
+  if (yearStr.length === 5) {
+    const actualYear = yearStr.slice(0, 4)
+    const quarter = yearStr.slice(4)
+    return `${actualYear}-Q${quarter}`
+  }
+  return yearStr
+}
+
+// 解析年份和季度
+function parseYearQuarter(year: number | string): { year: number; quarter: number | null } {
+  const raw = String(year)
+  if (raw.length === 5) {
+    return {
+      year: Number(raw.slice(0, 4)),
+      quarter: Number(raw.slice(4)),
+    }
+  }
+  return {
+    year: Number(raw),
+    quarter: null,
+  }
 }
 
 const INDICATOR_CONFIGS: Record<string, IndicatorConfig> = {
@@ -244,7 +270,7 @@ export default function StockDetail() {
     return ""
   }, [abstract])
 
-  // 年度数据处理
+  // 年度数据处理 - 修改年份显示逻辑
   const chartData = useMemo(() => {
     if (!abstract) return []
 
@@ -268,7 +294,8 @@ export default function StockDetail() {
         const selectedItem = sortedItems.find((item) => item.quarter === 4) || sortedItems[0]
 
         if (!yearDataMap[year]) {
-          yearDataMap[year] = { year: year.toString() }
+          // 使用 formatYearDisplay 函数格式化年份显示
+          yearDataMap[year] = { year: formatYearDisplay(year) }
         }
 
         Object.keys(selectedItem).forEach((key) => {
@@ -306,15 +333,31 @@ export default function StockDetail() {
     return sortedYears.map((year) => yearDataMap[year])
   }, [abstract])
 
-  // 分红季度数据处理
+  // 分红季度数据处理 - 修改年份显示逻辑
   const dividendChartData = useMemo(() => {
     if (!abstract || !abstract.dividend || !Array.isArray(abstract.dividend)) return []
 
     const dataList = abstract.dividend.map((item: any) => {
+      const yearStr = String(item.year)
+      let period: string
+      let actualYear: number
+      let quarter: number
+
+      // 处理5位年份的情况
+      if (yearStr.length === 5) {
+        actualYear = Number(yearStr.slice(0, 4))
+        quarter = Number(yearStr.slice(4))
+        period = `${actualYear}-Q${quarter}`
+      } else {
+        actualYear = item.year
+        quarter = item.quarter
+        period = `${item.year}-${QUARTER_NAMES[item.quarter] || `Q${item.quarter}`}`
+      }
+
       const result: any = {
-        period: `${item.year}-${QUARTER_NAMES[item.quarter] || `Q${item.quarter}`}`,
-        year: item.year,
-        quarter: item.quarter,
+        period,
+        year: actualYear,
+        quarter: quarter,
       }
 
       Object.keys(item).forEach((key) => {
@@ -497,7 +540,11 @@ export default function StockDetail() {
                 const formattedValue = typeof value === "number" ? value.toFixed(2) : value
                 return [`${formattedValue} ${field?.unit || ""}`, name]
               }}
-              labelFormatter={(label: string) => config.useQuarterlyData ? label : `${label}年`}
+              labelFormatter={(label: string) =>
+                config.useQuarterlyData
+                  ? label
+                  : `${label}${timePeriod === 1 ? "季度" : "年"}`
+              }
               labelStyle={{ fontWeight: 600, marginBottom: 8 }}
             />
             <Legend
@@ -591,7 +638,7 @@ export default function StockDetail() {
               value={timePeriod}
               onChange={setTimePeriod}
               options={[
-                { label: "近一年", value: 1 },
+                { label: "近一年(TTM)", value: 1 },
                 { label: "近三年", value: 3 },
                 { label: "近五年", value: 5 },
                 { label: "近十年", value: 10 },
@@ -669,7 +716,6 @@ export default function StockDetail() {
                   {renderChart("perIndicator")}
                 </Card>
               </Col>
-
 
             </Row>
           )}

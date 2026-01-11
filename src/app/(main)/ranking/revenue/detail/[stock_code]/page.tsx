@@ -31,7 +31,7 @@ export default function DetailPage() {
   }, [timePeriod])
 
   const periodOptions = [
-    { label: "近一年", value: 1 },
+    { label: "近一年(TTM)", value: 1 },
     { label: "近三年", value: 3 },
     { label: "近五年", value: 5 },
     { label: "近十年", value: 10 },

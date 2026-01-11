@@ -5,6 +5,7 @@ import ActionButtonComponent from '@/components/base/action-button';
 import { PaginatedTable } from '@/components/base/paginated-table';
 import TransitionWrapper from '@/components/base/transition-wrapper';
 import {
+  exportRankingMultipleFactor,
   useRankingMultipleFactors,
 } from '@/service/ranking-multiple-factor';
 import { createPaginationRequest, SortItem } from '@/types';
@@ -12,7 +13,7 @@ import {
   ListRankingMultipleFactorsRequest,
   RankingMultipleFactor,
 } from '@/types/ranking-multiple-factor';
-import { Form } from 'antd';
+import { Form, message } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { Award, Crown, Eye, Medal } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -51,7 +52,7 @@ const RankingMultipleFactorPage: React.FC = () => {
     mutateRankingMultipleFactors,
   } = useRankingMultipleFactors({
     ...rankingMultipleFactorQueryParams,
-    ...createPaginationRequest(current, pageSize,  JSON.stringify(sortList)),
+    ...createPaginationRequest(current, pageSize, JSON.stringify(sortList)),
   });
 
   const onQueryRankingMultipleFactorShow = () => {
@@ -77,13 +78,19 @@ const RankingMultipleFactorPage: React.FC = () => {
 
   const onQueryRankingMultipleFactorFinish = async () => {
     const values = queryRankingMultipleFactorForm.getFieldsValue();
-    const { create_time } = values;
+    const { create_time, query_period, sorting_rule } = values;
     if (create_time) {
       const [startDate, endDate] = create_time;
       values.create_time = [
         startDate.format('YYYY-MM-DD'),
         endDate.format('YYYY-MM-DD'),
       ];
+    }
+    if (query_period) {
+      setQueryPeriod(query_period)
+    }
+    if (sorting_rule) {
+      setSortingRule(sorting_rule)
     }
     const queryRankingMultipleFactor = values as ListRankingMultipleFactorsRequest;
     const filteredQueryRankingMultipleFactor = Object.fromEntries(
@@ -97,12 +104,36 @@ const RankingMultipleFactorPage: React.FC = () => {
 
 
   const { industryList } = useIndustry();
-  const [queryPeriod, setQueryPeriod] = useState<number>(3);
+  const [queryPeriod, setQueryPeriod] = useState(3)
+  const [sortingRule, setSortingRule] = useState(2)
   useEffect(() => {
     queryRankingMultipleFactorForm.setFieldsValue({
       query_period: queryPeriod,
+      sorting_rule: sortingRule,
     });
-  }, [queryRankingMultipleFactorForm, queryPeriod]);
+  }, [queryRankingMultipleFactorForm]);
+
+  // 导出模块
+  const resetSelectedRows = () => {
+    setSelectedRowKeys([]);
+    setSelectedRows([]);
+  };
+
+  const [isExportLoading, setIsExportLoading] = useState<boolean>(false);
+  const onRankingMultipleFactorExport = async () => {
+    if (selectedRowKeys === null || selectedRowKeys.length === 0) {
+      message.warning('请先选择导出的项目');
+      return;
+    }
+    try {
+      setIsExportLoading(true);
+      await exportRankingMultipleFactor({ ids: selectedRows.map((row) => row.id) });
+      resetSelectedRows();
+    } finally {
+      setIsExportLoading(false);
+    }
+  };
+
 
   // 表格列信息
   const rankingMultipleFactorColumns: ColumnsType<RankingMultipleFactor> = [
@@ -153,7 +184,6 @@ const RankingMultipleFactorPage: React.FC = () => {
     {
       title: "股票代码",
       dataIndex: "stock_code",
-      fixed: 'left',
       width: 100,
     },
     {
@@ -166,7 +196,6 @@ const RankingMultipleFactorPage: React.FC = () => {
     {
       title: "所属行业",
       dataIndex: "industry",
-      fixed: 'left',
       width: 180,
       ellipsis: true,
     },
@@ -179,7 +208,7 @@ const RankingMultipleFactorPage: React.FC = () => {
       width: 140,
     },
     {
-      title: "经净比加权平均(%)",
+      title: "净现比加权平均(%)",
       dataIndex: "cashflow_ratio_weighted_avg",
       key: "cashflow_ratio_weighted_avg",
       align: 'right',
@@ -319,7 +348,7 @@ const RankingMultipleFactorPage: React.FC = () => {
         <ActionButtonComponent
           onCreate={() => { }}
           onImport={() => { }}
-          onExport={() => { }}
+          onExport={onRankingMultipleFactorExport}
           onBatchModify={() => { }}
           onConfirmBatchRemove={() => { }}
           onConfirmBatchRemoveCancel={() => { }}

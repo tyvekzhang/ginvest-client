@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Table, Tabs, Select, Pagination, Card, Space } from "antd";
-import type { TabsProps, TableColumnsType } from "antd";
+import type { TabsProps, TableColumnsType, PaginationProps } from "antd";
 import { BarChart3, TableIcon, Eye, Medal, Award, Crown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
@@ -29,8 +29,16 @@ export default function RevenueRankingPage() {
   const [queryPeriod, setQueryPeriod] = useState<number>(3);
   const [industry, setIndustry] = useState<string>();
   const [current, setCurrent] = useState(1);
-  const [pageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(10);
   const [activeTab, setActiveTab] = useState("table");
+
+  const handlePaginationChange: PaginationProps['onChange'] = (
+    newCurrent,
+    newpage_size,
+  ) => {
+    setCurrent(newCurrent);
+    setPageSize(newpage_size)
+  };
 
   const { industryList } = useIndustry()
 
@@ -197,7 +205,9 @@ export default function RevenueRankingPage() {
             current={current}
             total={total || 0}
             pageSize={pageSize}
-            onChange={setCurrent}
+            onChange={handlePaginationChange}
+            showSizeChanger
+            showQuickJumper
             showTotal={(total) => `共 ${total} 条`}
           />
         </>
@@ -257,7 +267,7 @@ export default function RevenueRankingPage() {
                 setCurrent(1);
               }}
               options={[
-                { label: "近一年", value: 1 },
+                { label: "近一年(TTM)", value: 1 },
                 { label: "近三年", value: 3 },
                 { label: "近五年", value: 5 },
                 { label: "近十年", value: 10 },
